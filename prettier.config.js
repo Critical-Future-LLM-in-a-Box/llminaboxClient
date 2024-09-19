@@ -4,12 +4,12 @@ export default {
   useTabs: false,
   semi: true,
   singleQuote: false,
-  quoteProps: 'consistent',
+  quoteProps: "consistent",
   jsxSingleQuote: false,
-  trailingComma: 'none',
+  trailingComma: "none",
   bracketSpacing: true,
   bracketSameLine: false,
-  arrowParens: 'always',
+  arrowParens: "always",
   singleAttributePerLine: true,
-  endOfLine: 'lf',
+  endOfLine: "lf"
 };
