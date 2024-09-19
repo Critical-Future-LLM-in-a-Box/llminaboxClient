@@ -5,6 +5,7 @@
   "author": "Creative Tim",
   "license": "See license in https://www.creative-tim.com/license",
   "description": "React version of Material Dashboard 2 by Creative Tim",
+  "homepage": "./",
   "dependencies": {
     "@emotion/cache": "11.10.8",
     "@emotion/react": "11.10.8",
@@ -29,14 +30,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "eject": "react-scripts eject"
   },
   "browserslist": {
     "production": [
@@ -53,6 +47,7 @@
   "devDependencies": {
     "ajv": "^7.2.4",
     "eslint": "8.39.0",
+    "eslint-config-flat-recommended": "^1.1.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-jsx-a11y": "6.7.1",
