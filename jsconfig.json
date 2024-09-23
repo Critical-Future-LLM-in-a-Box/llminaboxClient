@@ -12,10 +12,11 @@
     "declaration": true,
     "declarationMap": true,
     "allowJs": true,
+    "baseUrl": "src",
     "paths": {
-      "*": ["./src/*"]
+      "@/*": ["*"]
     }
   },
-  "include": ["src", "js.cjs"],
-  "exclude": ["node_modules", "build", "dist"]
+  "include": ["src"],
+  "exclude": ["node_modules", "build"]
 }
