@@ -92,7 +92,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleCloseMenu = () => setOpenMenu(false);
 
   // Render the notifications menu
-  const renderMenu = () => (
+  /*const renderMenu = () => (
     <Menu
       anchorEl={openMenu}
       anchorReference={null}
@@ -108,7 +108,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
       <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
       <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
     </Menu>
-  );
+  );*/
 
   // Styles for the navbar icons
   const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
@@ -164,7 +164,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon sx={iconsStyle}>settings</Icon>
               </IconButton>
-              <IconButton
+              {/*<IconButton
                 size="small"
                 disableRipple
                 color="inherit"
@@ -176,7 +176,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon sx={iconsStyle}>notifications</Icon>
               </IconButton>
-              {renderMenu()}
+              {renderMenu()}*/}
             </MDBox>
           </MDBox>
         )}

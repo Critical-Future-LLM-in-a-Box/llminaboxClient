@@ -51,7 +51,7 @@ function Cover() {
             Join us today
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            Enter your email and password to register
+            The future of AI in business is here!
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -88,7 +88,7 @@ function Cover() {
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" color="info" fullWidth>
-                sign in
+                sign up
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">

@@ -39,8 +39,8 @@ import {
 } from "context";
 
 // Images
-import brandWhite from "assets/images/logo-ct.png";
-import brandDark from "assets/images/logo-ct-dark.png";
+import brandWhite from "assets/images/llminaboxlogo.png";
+import brandDark from "assets/images/llminaboxlogo.png";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -159,7 +159,7 @@ export default function App() {
                   ? brandDark
                   : brandWhite
               }
-              brandName="Material Dashboard 2"
+              brandName="LLM in a Box"
               routes={routes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
@@ -190,7 +190,7 @@ export default function App() {
                 ? brandDark
                 : brandWhite
             }
-            brandName="Material Dashboard 2"
+            brandName="LLM in a Box"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}

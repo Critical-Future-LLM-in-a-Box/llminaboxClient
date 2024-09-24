@@ -18,23 +18,23 @@ const routes = [
     route: "/dashboard",
     component: <Dashboard />
   },
-  {
+  /*{
     type: "collapse",
     name: "Tables",
     key: "tables",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/tables",
     component: <Tables />
-  },
+  },*/
   {
     type: "collapse",
-    name: "Billing",
+    name: "Pricing",
     key: "billing",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/billing",
     component: <Billing />
   },
-  {
+  /*{
     type: "collapse",
     name: "RTL",
     key: "rtl",
@@ -49,7 +49,7 @@ const routes = [
     icon: <Icon fontSize="small">notifications</Icon>,
     route: "/notifications",
     component: <Notifications />
-  },
+  },*/
   {
     type: "collapse",
     name: "Profile",
