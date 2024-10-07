@@ -1,163 +1,204 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
+import React, { useState } from "react";
+import {
+  Grid,
+  MenuItem,
+  Card,
+  CardContent,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Avatar
+} from "@mui/material";
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+import MDBox from "@/components/MDBox";
+import MDButton from "@/components/MDButton";
+import MDInput from "@/components/MDInput";
+import MDAvatar from "@/components/MDAvatar";
 
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
-import Grid from "@mui/material/Grid";
-
-// Material Dashboard 2 React components
-import MDBox from "components/MDBox";
-
-// Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
-import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 
-// Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
-import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
+export default function Dashboard() {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [voice, setVoice] = useState("Google US English");
+  const [avatar, setAvatar] = useState(null);
+  const [assistants, setAssistants] = useState([]);
 
-// Dashboard components
-import Projects from "layouts/dashboard/components/Projects";
-import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
+  const handleCreateAssistant = () => {
+    const newAssistant = { name, description, voice, avatar };
+    setAssistants([...assistants, newAssistant]);
+    setName("");
+    setDescription("");
+    setVoice("Google US English");
+    setAvatar(null);
+  };
 
-function Dashboard() {
-  const { sales, tasks } = reportsLineChartData;
+  const handleAvatarUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setAvatar(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox py={3}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="dark"
-                icon="weekend"
-                title="Bookings"
-                count={281}
-                percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
+      <MDBox p={3}>
+        <Grid
+          container
+          spacing={3}
+          alignItems="center"
+        >
+          {/* Name and Description */}
+          <Grid
+            item
+            xs={12}
+            md={8}
+          >
+            <Card>
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  padding: 3,
+                  gap: 3
                 }}
-              />
-            </MDBox>
+              >
+                <MDBox>
+                  <MDInput
+                    label="Assistant Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter assistant name"
+                    fullWidth
+                  />
+                </MDBox>
+
+                <MDBox>
+                  <MDInput
+                    label="Assistant Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Enter a description"
+                    fullWidth
+                    multiline
+                    rows={4}
+                  />
+                </MDBox>
+
+                <MDBox>
+                  <MDInput
+                    label="Voice Name"
+                    select
+                    value={voice}
+                    onChange={(e) => setVoice(e.target.value)}
+                    fullWidth
+                    placeholder="Select voice name"
+                    sx={{ "& div": { padding: "16px" } }}
+                  >
+                    <MenuItem value="Google US English">
+                      Google US English
+                    </MenuItem>
+                  </MDInput>
+                </MDBox>
+              </CardContent>
+            </Card>
           </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
-                percentage={{
-                  color: "success",
-                  amount: "+3%",
-                  label: "than last month",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="store"
-                title="Revenue"
-                count="34k"
-                percentage={{
-                  color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="primary"
-                icon="person_add"
-                title="Followers"
-                count="+91"
-                percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
-                }}
-              />
-            </MDBox>
+
+          {/* Avatar Upload Section */}
+          <Grid
+            item
+            xs={12}
+            md={4}
+          >
+            <Card>
+              <CardContent sx={{ textAlign: "center" }}>
+                <MDBox
+                  mb={2}
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  {avatar ? (
+                    <MDAvatar
+                      alt="Assistant Avatar"
+                      src={avatar}
+                      sx={{ width: 80, height: 80 }}
+                    />
+                  ) : (
+                    <Avatar sx={{ width: 80, height: 80 }}>A</Avatar>
+                  )}
+                </MDBox>
+
+                <MDButton
+                  component="label"
+                  color="info"
+                  variant="contained"
+                >
+                  Upload Avatar
+                  <input
+                    accept="image/*"
+                    type="file"
+                    hidden
+                    onChange={handleAvatarUpload}
+                  />
+                </MDButton>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
-        <MDBox mt={4.5}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={tasks}
-                />
-              </MDBox>
-            </Grid>
-          </Grid>
+
+        {/* Submit Button */}
+        <MDBox
+          mt={4}
+          display="flex"
+          justifyContent="center"
+        >
+          <MDButton
+            color="success"
+            size="large"
+            onClick={handleCreateAssistant}
+          >
+            Create Assistant
+          </MDButton>
         </MDBox>
-        <MDBox>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
-              <Projects />
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
-            </Grid>
-          </Grid>
+
+        {/* List of Created Assistants */}
+        <MDBox mt={4}>
+          <Card>
+            <CardContent>
+              <MDBox mb={2}>
+                <h3>Created Assistants</h3>
+              </MDBox>
+
+              <List>
+                {assistants.map((assistant, index) => (
+                  <ListItem key={index}>
+                    <ListItemAvatar>
+                      <Avatar
+                        alt={assistant.name}
+                        src={assistant.avatar || ""}
+                      />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={assistant.name}
+                      secondary={`${assistant.description} | Voice: ${assistant.voice}`}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+          </Card>
         </MDBox>
       </MDBox>
       <Footer />
     </DashboardLayout>
   );
 }
-
-export default Dashboard;

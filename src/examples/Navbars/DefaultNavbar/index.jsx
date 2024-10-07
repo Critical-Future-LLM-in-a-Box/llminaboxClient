@@ -38,16 +38,17 @@ import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMob
 import breakpoints from "assets/theme/base/breakpoints";
 
 // Material Dashboard 2 React context
-import { useMaterialUIController } from "context";
+import { useAppContext } from "context";
 
 function DefaultNavbar({ transparent, light, action }) {
-  const [controller] = useMaterialUIController();
+  const [controller] = useAppContext();
   const { darkMode } = controller;
 
   const [mobileNavbar, setMobileNavbar] = useState(false);
   const [mobileView, setMobileView] = useState(false);
 
-  const openMobileNavbar = ({ currentTarget }) => setMobileNavbar(currentTarget.parentNode);
+  const openMobileNavbar = ({ currentTarget }) =>
+    setMobileNavbar(currentTarget.parentNode);
   const closeMobileNavbar = () => setMobileNavbar(false);
 
   useEffect(() => {
@@ -62,8 +63,8 @@ function DefaultNavbar({ transparent, light, action }) {
       }
     }
 
-    /** 
-     The event listener that's calling the displayMobileNavbar function when 
+    /**
+     The event listener that's calling the displayMobileNavbar function when
      resizing the window.
     */
     window.addEventListener("resize", displayMobileNavbar);
@@ -94,12 +95,12 @@ function DefaultNavbar({ transparent, light, action }) {
         zIndex={3}
         sx={({
           palette: { transparent: transparentColor, white, background },
-          functions: { rgba },
+          functions: { rgba }
         }) => ({
           backgroundColor: transparent
             ? transparentColor.main
             : rgba(darkMode ? background.sidenav : white.main, 0.8),
-          backdropFilter: transparent ? "none" : `saturate(200%) blur(30px)`,
+          backdropFilter: transparent ? "none" : `saturate(200%) blur(30px)`
         })}
       >
         <MDBox
@@ -109,13 +110,32 @@ function DefaultNavbar({ transparent, light, action }) {
           lineHeight={1}
           pl={{ xs: 0, lg: 1 }}
         >
-          <MDTypography variant="button" fontWeight="bold" color={light ? "white" : "dark"}>
+          <MDTypography
+            variant="button"
+            fontWeight="bold"
+            color={light ? "white" : "dark"}
+          >
             Material Dashboard 2
           </MDTypography>
         </MDBox>
-        <MDBox color="inherit" display={{ xs: "none", lg: "flex" }} m={0} p={0}>
-          <DefaultNavbarLink icon="donut_large" name="dashboard" route="/dashboard" light={light} />
-          <DefaultNavbarLink icon="person" name="profile" route="/profile" light={light} />
+        <MDBox
+          color="inherit"
+          display={{ xs: "none", lg: "flex" }}
+          m={0}
+          p={0}
+        >
+          <DefaultNavbarLink
+            icon="donut_large"
+            name="dashboard"
+            route="/dashboard"
+            light={light}
+          />
+          <DefaultNavbarLink
+            icon="person"
+            name="profile"
+            route="/profile"
+            light={light}
+          />
           <DefaultNavbarLink
             icon="account_circle"
             name="sign up"
@@ -170,7 +190,12 @@ function DefaultNavbar({ transparent, light, action }) {
           <Icon fontSize="default">{mobileNavbar ? "close" : "menu"}</Icon>
         </MDBox>
       </MDBox>
-      {mobileView && <DefaultNavbarMobile open={mobileNavbar} close={closeMobileNavbar} />}
+      {mobileView && (
+        <DefaultNavbarMobile
+          open={mobileNavbar}
+          close={closeMobileNavbar}
+        />
+      )}
     </Container>
   );
 }
@@ -179,7 +204,7 @@ function DefaultNavbar({ transparent, light, action }) {
 DefaultNavbar.defaultProps = {
   transparent: false,
   light: false,
-  action: false,
+  action: false
 };
 
 // Typechecking props for the DefaultNavbar
@@ -199,11 +224,11 @@ DefaultNavbar.propTypes = {
         "warning",
         "error",
         "dark",
-        "light",
+        "light"
       ]),
-      label: PropTypes.string.isRequired,
-    }),
-  ]),
+      label: PropTypes.string.isRequired
+    })
+  ])
 };
 
 export default DefaultNavbar;

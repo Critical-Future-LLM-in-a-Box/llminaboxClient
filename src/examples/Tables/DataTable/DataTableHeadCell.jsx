@@ -23,10 +23,10 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController } from "context";
+import { useAppContext } from "context";
 
 function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
-  const [controller] = useMaterialUIController();
+  const [controller] = useAppContext();
   const { darkMode } = controller;
 
   return (
@@ -36,7 +36,7 @@ function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
       py={1.5}
       px={3}
       sx={({ palette: { light }, borders: { borderWidth } }) => ({
-        borderBottom: `${borderWidth[1]} solid ${light.main}`,
+        borderBottom: `${borderWidth[1]} solid ${light.main}`
       })}
     >
       <MDBox
@@ -50,7 +50,7 @@ function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
           fontWeight: fontWeightBold,
           textTransform: "uppercase",
           cursor: sorted && "pointer",
-          userSelect: sorted && "none",
+          userSelect: sorted && "none"
         })}
       >
         {children}
@@ -61,7 +61,7 @@ function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
             right={align !== "right" ? "16px" : 0}
             left={align === "right" ? "-5px" : "unset"}
             sx={({ typography: { size } }) => ({
-              fontSize: size.lg,
+              fontSize: size.lg
             })}
           >
             <MDBox
@@ -91,7 +91,7 @@ function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
 DataTableHeadCell.defaultProps = {
   width: "auto",
   sorted: "none",
-  align: "left",
+  align: "left"
 };
 
 // Typechecking props for the DataTableHeadCell
@@ -99,7 +99,7 @@ DataTableHeadCell.propTypes = {
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   children: PropTypes.node.isRequired,
   sorted: PropTypes.oneOf([false, "none", "asce", "desc"]),
-  align: PropTypes.oneOf(["left", "right", "center"]),
+  align: PropTypes.oneOf(["left", "right", "center"])
 };
 
 export default DataTableHeadCell;

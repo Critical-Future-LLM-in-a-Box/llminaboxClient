@@ -38,10 +38,10 @@ import Projects from "layouts/rtl/components/Projects";
 import OrdersOverview from "layouts/rtl/components/OrdersOverview";
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController, setDirection } from "context";
+import { useAppContext, setDirection } from "context";
 
 function RTL() {
-  const [, dispatch] = useMaterialUIController();
+  const [, dispatch] = useAppContext();
   const { sales, tasks } = reportsLineChartData;
 
   // Changing the direction to rtl
@@ -55,8 +55,16 @@ function RTL() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={3}>
+        <Grid
+          container
+          spacing={3}
+        >
+          <Grid
+            item
+            xs={12}
+            md={6}
+            lg={3}
+          >
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
@@ -66,12 +74,17 @@ function RTL() {
                 percentage={{
                   color: "success",
                   amount: "+55%",
-                  label: "من الأسبوع الماضي",
+                  label: "من الأسبوع الماضي"
                 }}
               />
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={3}>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            lg={3}
+          >
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 icon="leaderboard"
@@ -80,12 +93,17 @@ function RTL() {
                 percentage={{
                   color: "success",
                   amount: "+3%",
-                  label: "من الأسبوع الماضي",
+                  label: "من الأسبوع الماضي"
                 }}
               />
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={3}>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            lg={3}
+          >
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="success"
@@ -95,12 +113,17 @@ function RTL() {
                 percentage={{
                   color: "success",
                   amount: "+1%",
-                  label: "من الشهر الماضي",
+                  label: "من الشهر الماضي"
                 }}
               />
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={3}>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            lg={3}
+          >
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
@@ -110,15 +133,23 @@ function RTL() {
                 percentage={{
                   color: "success",
                   amount: "",
-                  label: "مقارنة بيوم أمس",
+                  label: "مقارنة بيوم أمس"
                 }}
               />
             </MDBox>
           </Grid>
         </Grid>
         <MDBox mt={4.5}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
+          <Grid
+            container
+            spacing={3}
+          >
+            <Grid
+              item
+              xs={12}
+              md={6}
+              lg={4}
+            >
               <MDBox mb={3}>
                 <ReportsBarChart
                   color="info"
@@ -129,7 +160,12 @@ function RTL() {
                 />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              lg={4}
+            >
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="success"
@@ -144,7 +180,12 @@ function RTL() {
                 />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              lg={4}
+            >
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="dark"
@@ -158,11 +199,24 @@ function RTL() {
           </Grid>
         </MDBox>
         <MDBox>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
+          <Grid
+            container
+            spacing={3}
+          >
+            <Grid
+              item
+              xs={12}
+              md={6}
+              lg={8}
+            >
               <Projects />
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              lg={4}
+            >
               <OrdersOverview />
             </Grid>
           </Grid>

@@ -1,106 +1,86 @@
-import { useState, useEffect, useMemo } from "react";
-
-// react-router components
+import { default as React, useState, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
-// @mui material components
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Icon from "@mui/material/Icon";
 
-// Material Dashboard 2 React components
-import MDBox from "components/MDBox";
-
-// Material Dashboard 2 React example components
-import Sidenav from "examples/Sidenav";
-import Configurator from "examples/Configurator";
-
-// Material Dashboard 2 React themes
-import theme from "assets/theme";
-import themeRTL from "assets/theme/theme-rtl";
-
-// Material Dashboard 2 React Dark Mode themes
-import themeDark from "assets/theme-dark";
-import themeDarkRTL from "assets/theme-dark/theme-rtl";
-
-// RTL plugins
-import rtlPlugin from "stylis-plugin-rtl";
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
-
-// Material Dashboard 2 React routes
+import { useAppContext } from "@/context";
 import routes from "@/routes";
 
-// Material Dashboard 2 React contexts
-import {
-  useMaterialUIController,
-  setMiniSidenav,
-  setOpenConfigurator
-} from "context";
+import MDBox from "@/components/MDBox";
+import Sidenav from "@/examples/Sidenav";
+import Configurator from "@/examples/Configurator";
 
-// Images
-import brandWhite from "assets/images/logo-ct.png";
-import brandDark from "assets/images/logo-ct-dark.png";
+import theme from "@/assets/theme";
+import themeDark from "@/assets/theme-dark";
 
+import brandWhite from "@/assets/images/llminaboxlogo.png";
+import brandDark from "@/assets/images/llminaboxlogo.png";
+
+import "material-icons/iconfont/material-icons.css";
+import "@fontsource/roboto";
+
+/**
+ * Main Application component
+ * Handles the routing, state management, and overall structure of the dashboard.
+ * It provides theme configuration, side navigation, and other global elements.
+ */
 export default function App() {
-  const [controller, dispatch] = useMaterialUIController();
-  const {
-    miniSidenav,
-    direction,
-    layout,
-    openConfigurator,
-    sidenavColor,
-    transparentSidenav,
-    whiteSidenav,
-    darkMode
-  } = controller;
+  // Global app context data
+  const [appData, dispatch] = useAppContext();
+
+  // State to track hover event on sidenav
   const [onMouseEnter, setOnMouseEnter] = useState(false);
-  const [rtlCache, setRtlCache] = useState(null);
+
+  // Access current pathname for location-based effects
   const { pathname } = useLocation();
 
-  // Cache for the rtl
-  useMemo(() => {
-    const cacheRtl = createCache({
-      key: "rtl",
-      stylisPlugins: [rtlPlugin]
-    });
-
-    setRtlCache(cacheRtl);
-  }, []);
-
-  // Open sidenav when mouse enter on mini sidenav
+  /**
+   * Handle the mouse enter event on the sidenav.
+   * This expands the sidenav when the user hovers over it.
+   */
   const handleOnMouseEnter = () => {
-    if (miniSidenav && !onMouseEnter) {
-      setMiniSidenav(dispatch, false);
+    if (appData.miniSidenav && !onMouseEnter) {
+      dispatch({ type: "MINI_SIDENAV", value: false });
       setOnMouseEnter(true);
     }
   };
 
-  // Close sidenav when mouse leave mini sidenav
+  /**
+   * Handle the mouse leave event on the sidenav.
+   * This collapses the sidenav when the user moves the mouse away.
+   */
   const handleOnMouseLeave = () => {
     if (onMouseEnter) {
-      setMiniSidenav(dispatch, true);
+      dispatch({ type: "MINI_SIDENAV", value: true });
       setOnMouseEnter(false);
     }
   };
 
-  // Change the openConfigurator state
-  const handleConfiguratorOpen = () =>
-    setOpenConfigurator(dispatch, !openConfigurator);
+  /**
+   * Toggle the configurator open/close state.
+   * This function is triggered by clicking the settings button.
+   */
+  const handleConfiguratorOpen = () => {
+    dispatch({ type: "OPEN_CONFIGURATOR", value: !appData.openConfigurator });
+  };
 
-  // Setting the dir attribute for the body element
-  useEffect(() => {
-    document.body.setAttribute("dir", direction);
-  }, [direction]);
-
-  // Setting page scroll to 0 when changing the route
+  /**
+   * Scroll to top on location change.
+   */
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-  const getRoutes = (allRoutes) =>
-    allRoutes.map((route) => {
+  /**
+   * Recursive function to generate routes from a nested routes configuration.
+   * @param {Array} allRoutes - Array of route objects
+   * @returns {Array} - Array of Route components
+   */
+  const getRoutes = (allRoutes) => {
+    return allRoutes.map((route) => {
       if (route.collapse) {
         return getRoutes(route.collapse);
       }
@@ -118,7 +98,9 @@ export default function App() {
 
       return null;
     });
+  };
 
+  // Floating button to toggle the Configurator component
   const configsButton = (
     <MDBox
       display="flex"
@@ -146,47 +128,17 @@ export default function App() {
     </MDBox>
   );
 
-  return direction === "rtl" ? (
-    <CacheProvider value={rtlCache}>
-      <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
-        <CssBaseline />
-        {layout === "dashboard" && (
-          <>
-            <Sidenav
-              color={sidenavColor}
-              brand={
-                (transparentSidenav && !darkMode) || whiteSidenav
-                  ? brandDark
-                  : brandWhite
-              }
-              brandName="Material Dashboard 2"
-              routes={routes}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-            />
-            <Configurator />
-            {configsButton}
-          </>
-        )}
-        {layout === "vr" && <Configurator />}
-        <Routes>
-          {getRoutes(routes)}
-          <Route
-            path="*"
-            element={<Navigate to="/dashboard" />}
-          />
-        </Routes>
-      </ThemeProvider>
-    </CacheProvider>
-  ) : (
-    <ThemeProvider theme={darkMode ? themeDark : theme}>
+  return (
+    <ThemeProvider theme={appData.darkMode ? themeDark : theme}>
       <CssBaseline />
-      {layout === "dashboard" && (
+      {appData.layout === "dashboard" && (
         <>
+          {/* Side navigation bar with dynamic settings */}
           <Sidenav
-            color={sidenavColor}
+            color={appData.sidenavColor}
             brand={
-              (transparentSidenav && !darkMode) || whiteSidenav
+              (appData.transparentSidenav && !appData.darkMode) ||
+              appData.whiteSidenav
                 ? brandDark
                 : brandWhite
             }
@@ -195,13 +147,15 @@ export default function App() {
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
+          {/* Configurator settings panel */}
           <Configurator />
           {configsButton}
         </>
       )}
-      {layout === "vr" && <Configurator />}
+      {appData.layout === "vr" && <Configurator />}
       <Routes>
         {getRoutes(routes)}
+        {/* Default route if no matching path */}
         <Route
           path="*"
           element={<Navigate to="/dashboard" />}

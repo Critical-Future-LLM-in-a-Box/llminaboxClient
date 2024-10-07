@@ -25,10 +25,10 @@ import PropTypes from "prop-types";
 import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React context
-import { useMaterialUIController, setLayout } from "context";
+import { useAppContext, setLayout } from "context";
 
 function DashboardLayout({ children }) {
-  const [controller, dispatch] = useMaterialUIController();
+  const [controller, dispatch] = useAppContext();
   const { miniSidenav } = controller;
   const { pathname } = useLocation();
 
@@ -46,9 +46,9 @@ function DashboardLayout({ children }) {
           marginLeft: miniSidenav ? pxToRem(120) : pxToRem(274),
           transition: transitions.create(["margin-left", "margin-right"], {
             easing: transitions.easing.easeInOut,
-            duration: transitions.duration.standard,
-          }),
-        },
+            duration: transitions.duration.standard
+          })
+        }
       })}
     >
       {children}
@@ -58,7 +58,7 @@ function DashboardLayout({ children }) {
 
 // Typechecking props for the DashboardLayout
 DashboardLayout.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };
 
 export default DashboardLayout;

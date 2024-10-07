@@ -25,10 +25,10 @@ import PropTypes from "prop-types";
 import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React context
-import { useMaterialUIController, setLayout } from "context";
+import { useAppContext, setLayout } from "context";
 
 function PageLayout({ background, children }) {
-  const [, dispatch] = useMaterialUIController();
+  const [, dispatch] = useAppContext();
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -50,13 +50,13 @@ function PageLayout({ background, children }) {
 
 // Setting default values for the props for PageLayout
 PageLayout.defaultProps = {
-  background: "default",
+  background: "default"
 };
 
 // Typechecking props for the PageLayout
 PageLayout.propTypes = {
   background: PropTypes.oneOf(["white", "light", "default"]),
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };
 
 export default PageLayout;

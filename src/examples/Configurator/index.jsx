@@ -39,27 +39,34 @@ import ConfiguratorRoot from "examples/Configurator/ConfiguratorRoot";
 
 // Material Dashboard 2 React context
 import {
-  useMaterialUIController,
+  useAppContext,
   setOpenConfigurator,
   setTransparentSidenav,
   setWhiteSidenav,
   setFixedNavbar,
   setSidenavColor,
-  setDarkMode,
+  setDarkMode
 } from "context";
 
 function Configurator() {
-  const [controller, dispatch] = useMaterialUIController();
+  const [controller, dispatch] = useAppContext();
   const {
     openConfigurator,
     fixedNavbar,
     sidenavColor,
     transparentSidenav,
     whiteSidenav,
-    darkMode,
+    darkMode
   } = controller;
   const [disabled, setDisabled] = useState(false);
-  const sidenavColors = ["primary", "dark", "info", "success", "warning", "error"];
+  const sidenavColors = [
+    "primary",
+    "dark",
+    "info",
+    "success",
+    "warning",
+    "error"
+  ];
 
   // Use the useEffect hook to change the button state for the sidenav type based on window size.
   useEffect(() => {
@@ -98,37 +105,44 @@ function Configurator() {
   const sidenavTypeButtonsStyles = ({
     functions: { pxToRem },
     palette: { white, dark, background },
-    borders: { borderWidth },
+    borders: { borderWidth }
   }) => ({
-    height: pxToRem(39),
-    background: darkMode ? background.sidenav : white.main,
-    color: darkMode ? white.main : dark.main,
-    border: `${borderWidth[1]} solid ${darkMode ? white.main : dark.main}`,
+    "height": pxToRem(39),
+    "background": darkMode ? background.sidenav : white.main,
+    "color": darkMode ? white.main : dark.main,
+    "border": `${borderWidth[1]} solid ${darkMode ? white.main : dark.main}`,
 
     "&:hover, &:focus, &:focus:not(:hover)": {
       background: darkMode ? background.sidenav : white.main,
       color: darkMode ? white.main : dark.main,
-      border: `${borderWidth[1]} solid ${darkMode ? white.main : dark.main}`,
-    },
+      border: `${borderWidth[1]} solid ${darkMode ? white.main : dark.main}`
+    }
   });
 
   // sidenav type active button styles
   const sidenavTypeActiveButtonStyles = ({
     functions: { pxToRem, linearGradient },
-    palette: { white, gradients, background },
+    palette: { white, gradients, background }
   }) => ({
-    height: pxToRem(39),
-    background: darkMode ? white.main : linearGradient(gradients.dark.main, gradients.dark.state),
-    color: darkMode ? background.sidenav : white.main,
+    "height": pxToRem(39),
+    "background": darkMode
+      ? white.main
+      : linearGradient(gradients.dark.main, gradients.dark.state),
+    "color": darkMode ? background.sidenav : white.main,
 
     "&:hover, &:focus, &:focus:not(:hover)": {
-      background: darkMode ? white.main : linearGradient(gradients.dark.main, gradients.dark.state),
-      color: darkMode ? background.sidenav : white.main,
-    },
+      background: darkMode
+        ? white.main
+        : linearGradient(gradients.dark.main, gradients.dark.state),
+      color: darkMode ? background.sidenav : white.main
+    }
   });
 
   return (
-    <ConfiguratorRoot variant="permanent" ownerState={{ openConfigurator }}>
+    <ConfiguratorRoot
+      variant="permanent"
+      ownerState={{ openConfigurator }}
+    >
       <MDBox
         display="flex"
         justifyContent="space-between"
@@ -139,7 +153,10 @@ function Configurator() {
       >
         <MDBox>
           <MDTypography variant="h5">Material UI Configurator</MDTypography>
-          <MDTypography variant="body2" color="text">
+          <MDTypography
+            variant="body2"
+            color="text"
+          >
             See our dashboard options.
           </MDTypography>
         </MDBox>
@@ -151,7 +168,7 @@ function Configurator() {
             stroke: "currentColor",
             strokeWidth: "2px",
             cursor: "pointer",
-            transform: "translateY(5px)",
+            transform: "translateY(5px)"
           })}
           onClick={handleCloseConfigurator}
         >
@@ -161,7 +178,11 @@ function Configurator() {
 
       <Divider />
 
-      <MDBox pt={0.5} pb={3} px={3}>
+      <MDBox
+        pt={0.5}
+        pb={3}
+        px={3}
+      >
         <MDBox>
           <MDTypography variant="h6">Sidenav Colors</MDTypography>
 
@@ -172,13 +193,13 @@ function Configurator() {
                 sx={({
                   borders: { borderWidth },
                   palette: { white, dark, background },
-                  transitions,
+                  transitions
                 }) => ({
-                  width: "24px",
-                  height: "24px",
-                  padding: 0,
-                  border: `${borderWidth[1]} solid ${darkMode ? background.sidenav : white.main}`,
-                  borderColor: () => {
+                  "width": "24px",
+                  "height": "24px",
+                  "padding": 0,
+                  "border": `${borderWidth[1]} solid ${darkMode ? background.sidenav : white.main}`,
+                  "borderColor": () => {
                     let borderColorValue = sidenavColor === color && dark.main;
 
                     if (darkMode && sidenavColor === color) {
@@ -187,20 +208,26 @@ function Configurator() {
 
                     return borderColorValue;
                   },
-                  transition: transitions.create("border-color", {
+                  "transition": transitions.create("border-color", {
                     easing: transitions.easing.sharp,
-                    duration: transitions.duration.shorter,
+                    duration: transitions.duration.shorter
                   }),
-                  backgroundImage: ({ functions: { linearGradient }, palette: { gradients } }) =>
-                    linearGradient(gradients[color].main, gradients[color].state),
+                  "backgroundImage": ({
+                    functions: { linearGradient },
+                    palette: { gradients }
+                  }) =>
+                    linearGradient(
+                      gradients[color].main,
+                      gradients[color].state
+                    ),
 
                   "&:not(:last-child)": {
-                    mr: 1,
+                    mr: 1
                   },
 
                   "&:hover, &:focus, &:active": {
-                    borderColor: darkMode ? white.main : dark.main,
-                  },
+                    borderColor: darkMode ? white.main : dark.main
+                  }
                 })}
                 onClick={() => setSidenavColor(dispatch, color)}
               />
@@ -208,9 +235,15 @@ function Configurator() {
           </MDBox>
         </MDBox>
 
-        <MDBox mt={3} lineHeight={1}>
+        <MDBox
+          mt={3}
+          lineHeight={1}
+        >
           <MDTypography variant="h6">Sidenav Type</MDTypography>
-          <MDTypography variant="button" color="text">
+          <MDTypography
+            variant="button"
+            color="text"
+          >
             Choose between different sidenav types.
           </MDTypography>
 
@@ -218,7 +251,7 @@ function Configurator() {
             sx={{
               display: "flex",
               mt: 2,
-              mr: 1,
+              mr: 1
             }}
           >
             <MDButton
@@ -276,16 +309,30 @@ function Configurator() {
         >
           <MDTypography variant="h6">Navbar Fixed</MDTypography>
 
-          <Switch checked={fixedNavbar} onChange={handleFixedNavbar} />
+          <Switch
+            checked={fixedNavbar}
+            onChange={handleFixedNavbar}
+          />
         </MDBox>
         <Divider />
-        <MDBox display="flex" justifyContent="space-between" alignItems="center" lineHeight={1}>
+        <MDBox
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          lineHeight={1}
+        >
           <MDTypography variant="h6">Light / Dark</MDTypography>
 
-          <Switch checked={darkMode} onChange={handleDarkMode} />
+          <Switch
+            checked={darkMode}
+            onChange={handleDarkMode}
+          />
         </MDBox>
         <Divider />
-        <MDBox mt={3} mb={2}>
+        <MDBox
+          mt={3}
+          mb={2}
+        >
           <MDButton
             component={Link}
             href="https://www.creative-tim.com/learning-lab/react/quick-start/material-dashboard/"
@@ -298,7 +345,10 @@ function Configurator() {
             view documentation
           </MDButton>
         </MDBox>
-        <MDBox display="flex" justifyContent="center">
+        <MDBox
+          display="flex"
+          justifyContent="center"
+        >
           <GitHubButton
             href="https://github.com/creativetimofficial/material-dashboard-react"
             data-icon="octicon-star"
@@ -309,12 +359,18 @@ function Configurator() {
             Star
           </GitHubButton>
         </MDBox>
-        <MDBox mt={2} textAlign="center">
+        <MDBox
+          mt={2}
+          textAlign="center"
+        >
           <MDBox mb={0.5}>
             <MDTypography variant="h6">Thank you for sharing!</MDTypography>
           </MDBox>
 
-          <MDBox display="flex" justifyContent="center">
+          <MDBox
+            display="flex"
+            justifyContent="center"
+          >
             <MDBox mr={1.5}>
               <MDButton
                 component={Link}

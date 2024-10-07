@@ -1,75 +1,26 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+import { default as React, createContext, useContext } from "react";
+import { useImmerReducer } from "use-immer";
 
 /**
-  This file is used for controlling the global states of the components,
-  you can customize the states for the different components here.
-*/
+ * Context for the application state
+ */
+export const appContext = createContext();
 
-import { createContext, useContext, useReducer, useMemo } from "react";
-
-// prop-types is a library for typechecking of props
-import PropTypes from "prop-types";
-
-// Material Dashboard 2 React main context
-const MaterialUI = createContext();
-
-// Setting custom name for the context which is visible on react dev tools
-MaterialUI.displayName = "MaterialUIContext";
-
-// Material Dashboard 2 React reducer
-function reducer(state, action) {
-  switch (action.type) {
-    case "MINI_SIDENAV": {
-      return { ...state, miniSidenav: action.value };
-    }
-    case "TRANSPARENT_SIDENAV": {
-      return { ...state, transparentSidenav: action.value };
-    }
-    case "WHITE_SIDENAV": {
-      return { ...state, whiteSidenav: action.value };
-    }
-    case "SIDENAV_COLOR": {
-      return { ...state, sidenavColor: action.value };
-    }
-    case "TRANSPARENT_NAVBAR": {
-      return { ...state, transparentNavbar: action.value };
-    }
-    case "FIXED_NAVBAR": {
-      return { ...state, fixedNavbar: action.value };
-    }
-    case "OPEN_CONFIGURATOR": {
-      return { ...state, openConfigurator: action.value };
-    }
-    case "DIRECTION": {
-      return { ...state, direction: action.value };
-    }
-    case "LAYOUT": {
-      return { ...state, layout: action.value };
-    }
-    case "DARKMODE": {
-      return { ...state, darkMode: action.value };
-    }
-    default: {
-      throw new Error(`Unhandled action type: ${action.type}`);
-    }
-  }
+/**
+ * Custom hook to use the app context
+ * @returns {Object} - The app context
+ */
+export function useAppContext() {
+  return useContext(appContext);
 }
 
-// Material Dashboard 2 React context provider
-function MaterialUIControllerProvider({ children }) {
+/**
+ * AppContextProvider component to provide global state to its children
+ * @param {Object} props - React component props
+ * @param {React.ReactNode} props.children - Children components that need access to the context
+ * @returns {JSX.Element} - App context provider with the global state
+ */
+export function AppContextProvider({ children }) {
   const initialState = {
     miniSidenav: false,
     transparentSidenav: false,
@@ -80,57 +31,134 @@ function MaterialUIControllerProvider({ children }) {
     openConfigurator: false,
     direction: "ltr",
     layout: "dashboard",
-    darkMode: false,
+    darkMode: false
   };
 
-  const [controller, dispatch] = useReducer(reducer, initialState);
+  const contextData = useImmerReducer(reducer, initialState);
 
-  const value = useMemo(() => [controller, dispatch], [controller, dispatch]);
-
-  return <MaterialUI.Provider value={value}>{children}</MaterialUI.Provider>;
+  return (
+    <appContext.Provider value={contextData}>{children}</appContext.Provider>
+  );
 }
 
-// Material Dashboard 2 React custom hook for using context
-function useMaterialUIController() {
-  const context = useContext(MaterialUI);
-
-  if (!context) {
-    throw new Error(
-      "useMaterialUIController should be used inside the MaterialUIControllerProvider."
-    );
+/**
+ * Reducer function to manage the app state
+ * @param {Object} draft - Draft state (immutable)
+ * @param {Object} action - Action containing the type and value to update the state
+ */
+function reducer(draft, action) {
+  switch (action.type) {
+    case "MINI_SIDENAV":
+      draft.miniSidenav = action.value;
+      break;
+    case "TRANSPARENT_SIDENAV":
+      draft.transparentSidenav = action.value;
+      break;
+    case "WHITE_SIDENAV":
+      draft.whiteSidenav = action.value;
+      break;
+    case "SIDENAV_COLOR":
+      draft.sidenavColor = action.value;
+      break;
+    case "TRANSPARENT_NAVBAR":
+      draft.transparentNavbar = action.value;
+      break;
+    case "FIXED_NAVBAR":
+      draft.fixedNavbar = action.value;
+      break;
+    case "OPEN_CONFIGURATOR":
+      draft.openConfigurator = action.value;
+      break;
+    case "DIRECTION":
+      draft.direction = action.value;
+      break;
+    case "LAYOUT":
+      draft.layout = action.value;
+      break;
+    case "DARKMODE":
+      draft.darkMode = action.value;
+      break;
+    default:
+      break;
   }
-
-  return context;
 }
 
-// Typechecking props for the MaterialUIControllerProvider
-MaterialUIControllerProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
+/**
+ * Dispatch action to toggle mini sidenav
+ * @param {Function} dispatch - Dispatch function from the reducer
+ * @param {boolean} value - New value for miniSidenav
+ */
+export const setMiniSidenav = (dispatch, value) =>
+  dispatch({ type: "MINI_SIDENAV", value });
 
-// Context module functions
-const setMiniSidenav = (dispatch, value) => dispatch({ type: "MINI_SIDENAV", value });
-const setTransparentSidenav = (dispatch, value) => dispatch({ type: "TRANSPARENT_SIDENAV", value });
-const setWhiteSidenav = (dispatch, value) => dispatch({ type: "WHITE_SIDENAV", value });
-const setSidenavColor = (dispatch, value) => dispatch({ type: "SIDENAV_COLOR", value });
-const setTransparentNavbar = (dispatch, value) => dispatch({ type: "TRANSPARENT_NAVBAR", value });
-const setFixedNavbar = (dispatch, value) => dispatch({ type: "FIXED_NAVBAR", value });
-const setOpenConfigurator = (dispatch, value) => dispatch({ type: "OPEN_CONFIGURATOR", value });
-const setDirection = (dispatch, value) => dispatch({ type: "DIRECTION", value });
-const setLayout = (dispatch, value) => dispatch({ type: "LAYOUT", value });
-const setDarkMode = (dispatch, value) => dispatch({ type: "DARKMODE", value });
+/**
+ * Dispatch action to toggle transparent sidenav
+ * @param {Function} dispatch - Dispatch function from the reducer
+ * @param {boolean} value - New value for transparentSidenav
+ */
+export const setTransparentSidenav = (dispatch, value) =>
+  dispatch({ type: "TRANSPARENT_SIDENAV", value });
 
-export {
-  MaterialUIControllerProvider,
-  useMaterialUIController,
-  setMiniSidenav,
-  setTransparentSidenav,
-  setWhiteSidenav,
-  setSidenavColor,
-  setTransparentNavbar,
-  setFixedNavbar,
-  setOpenConfigurator,
-  setDirection,
-  setLayout,
-  setDarkMode,
-};
+/**
+ * Dispatch action to toggle white sidenav
+ * @param {Function} dispatch - Dispatch function from the reducer
+ * @param {boolean} value - New value for whiteSidenav
+ */
+export const setWhiteSidenav = (dispatch, value) =>
+  dispatch({ type: "WHITE_SIDENAV", value });
+
+/**
+ * Dispatch action to set the sidenav color
+ * @param {Function} dispatch - Dispatch function from the reducer
+ * @param {string} value - New value for sidenavColor
+ */
+export const setSidenavColor = (dispatch, value) =>
+  dispatch({ type: "SIDENAV_COLOR", value });
+
+/**
+ * Dispatch action to toggle transparent navbar
+ * @param {Function} dispatch - Dispatch function from the reducer
+ * @param {boolean} value - New value for transparentNavbar
+ */
+export const setTransparentNavbar = (dispatch, value) =>
+  dispatch({ type: "TRANSPARENT_NAVBAR", value });
+
+/**
+ * Dispatch action to toggle fixed navbar
+ * @param {Function} dispatch - Dispatch function from the reducer
+ * @param {boolean} value - New value for fixedNavbar
+ */
+export const setFixedNavbar = (dispatch, value) =>
+  dispatch({ type: "FIXED_NAVBAR", value });
+
+/**
+ * Dispatch action to toggle open configurator
+ * @param {Function} dispatch - Dispatch function from the reducer
+ * @param {boolean} value - New value for openConfigurator
+ */
+export const setOpenConfigurator = (dispatch, value) =>
+  dispatch({ type: "OPEN_CONFIGURATOR", value });
+
+/**
+ * Dispatch action to set the layout direction (ltr/rtl)
+ * @param {Function} dispatch - Dispatch function from the reducer
+ * @param {string} value - New value for direction (ltr/rtl)
+ */
+export const setDirection = (dispatch, value) =>
+  dispatch({ type: "DIRECTION", value });
+
+/**
+ * Dispatch action to set the layout type
+ * @param {Function} dispatch - Dispatch function from the reducer
+ * @param {string} value - New value for layout (e.g. 'dashboard')
+ */
+export const setLayout = (dispatch, value) =>
+  dispatch({ type: "LAYOUT", value });
+
+/**
+ * Dispatch action to toggle dark mode
+ * @param {Function} dispatch - Dispatch function from the reducer
+ * @param {boolean} value - New value for darkMode
+ */
+export const setDarkMode = (dispatch, value) =>
+  dispatch({ type: "DARKMODE", value });

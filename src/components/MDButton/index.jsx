@@ -22,11 +22,11 @@ import PropTypes from "prop-types";
 import MDButtonRoot from "components/MDButton/MDButtonRoot";
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController } from "context";
+import { useAppContext } from "context";
 
 const MDButton = forwardRef(
   ({ color, variant, size, circular, iconOnly, children, ...rest }, ref) => {
-    const [controller] = useMaterialUIController();
+    const [controller] = useAppContext();
     const { darkMode } = controller;
 
     return (
@@ -50,7 +50,7 @@ MDButton.defaultProps = {
   variant: "contained",
   color: "white",
   circular: false,
-  iconOnly: false,
+  iconOnly: false
 };
 
 // Typechecking props for the MDButton
@@ -66,11 +66,11 @@ MDButton.propTypes = {
     "warning",
     "error",
     "light",
-    "dark",
+    "dark"
   ]),
   circular: PropTypes.bool,
   iconOnly: PropTypes.bool,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };
 
 export default MDButton;
