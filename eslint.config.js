@@ -3,16 +3,18 @@ import globals from "globals";
 
 export default [
   ...recommendedConfig({
-    js: true,
-    ts: true,
-    react: true,
-    prettier: true,
-    stylistic: false
+    js: "recommended",
+    ts: "recommended",
+    imports: "recommended",
+    react: "recommended",
+    prettier: "recommended",
+    stylistic: ""
   }),
   {
     languageOptions: {
       globals: {
-        ...globals.browser
+        ...globals.browser,
+        ...globals.node
       }
     }
   }
