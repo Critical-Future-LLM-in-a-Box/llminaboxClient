@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { useContextData } from "@/assistant/context";
 import { getOnlineStatus } from "@/assistant/utils/getOnlineStatus";
 import { getAllowedUploads } from "@/assistant/utils/getAllowedUploads";
@@ -9,19 +9,20 @@ import ChatbotFooter from "@/assistant/components/ChatbotFooter";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function Chatbot(): JSX.Element {
+// General Chatbot component
+interface ChatbotProps {
+  width?: string; // Width of the chatbot (default is 100%)
+  height?: string; // Height of the chatbot (default is 100%)
+}
+
+export default function Chatbot({
+  width = "100%",
+  height = "100%"
+}: ChatbotProps): JSX.Element {
   const [chatData, dispatch] = useContextData();
 
-  const width = chatData.config.width
-    ? chatData.config.width.includes("px")
-      ? chatData.config.width
-      : chatData.config.width + "px"
-    : "100vw";
-  const height = chatData.config.height
-    ? chatData.config.height.includes("px")
-      ? chatData.config.height
-      : chatData.config.height + "px"
-    : "100vh";
+  const resolvedWidth = width.includes("px") ? width : `${width}px`;
+  const resolvedHeight = height.includes("px") ? height : `${height}px`;
 
   useEffect(() => {
     if (chatData.error) {
@@ -44,8 +45,8 @@ export default function Chatbot(): JSX.Element {
       style={{
         backgroundColor: chatData.config.themeColor,
         color: chatData.config.textColor,
-        width: width,
-        height: height
+        width: resolvedWidth,
+        height: resolvedHeight
       }}
     >
       <ToastContainer

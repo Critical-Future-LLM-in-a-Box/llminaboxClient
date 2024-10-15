@@ -1,166 +1,148 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// react-router-dom components
+import React from "react";
 import { Link } from "react-router-dom";
-
-// @mui material components
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
-
-// Material Dashboard 2 React components
+import Typography from "@mui/material/Typography";
 import MDBox from "@/client/components/MDBox";
-import MDTypography from "@/client/components/MDTypography";
-import MDInput from "@/client/components/MDInput";
 import MDButton from "@/client/components/MDButton";
+import MDInput from "@/client/components/MDInput";
+import DashboardLayout from "@/client/examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "@/client/examples/Navbars/DashboardNavbar";
+import Footer from "@/client/examples/Footer";
 
-// Authentication layout components
-import CoverLayout from "@/client/layouts/authentication/components/CoverLayout";
-
-// Images
-import bgImage from "@/client/assets/images/bg-sign-up-cover.jpeg";
-
-function Cover() {
+function SignUp() {
   return (
-    <CoverLayout image={bgImage}>
-      <Card>
+    <DashboardLayout>
+      <DashboardNavbar />
+      <MDBox
+        mb={6}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="80vh"
+      >
         <MDBox
-          variant="gradient"
-          bgColor="info"
-          borderRadius="lg"
-          coloredShadow="success"
-          mx={2}
-          mt={-3}
-          p={3}
-          mb={1}
-          textAlign="center"
+          width="100%"
+          maxWidth="500px"
+          mx="auto"
+          px={1}
         >
-          <MDTypography
-            variant="h4"
-            fontWeight="medium"
-            color="white"
-            mt={1}
-          >
-            Join us today
-          </MDTypography>
-          <MDTypography
-            display="block"
-            variant="button"
-            color="white"
-            my={1}
-          >
-            Enter your email and password to register
-          </MDTypography>
-        </MDBox>
-        <MDBox
-          pt={4}
-          pb={3}
-          px={3}
-        >
-          <MDBox
-            component="form"
-            role="form"
-          >
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Name"
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="email"
-                label="Email"
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="password"
-                label="Password"
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
+          <Card sx={{ padding: 4, boxShadow: 3 }}>
+            {/* Header */}
             <MDBox
-              display="flex"
-              alignItems="center"
-              ml={-1}
-            >
-              <Checkbox />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;I agree the&nbsp;
-              </MDTypography>
-              <MDTypography
-                component="a"
-                href="#"
-                variant="button"
-                fontWeight="bold"
-                color="info"
-                textGradient
-              >
-                Terms and Conditions
-              </MDTypography>
-            </MDBox>
-            <MDBox
-              mt={4}
-              mb={1}
-            >
-              <MDButton
-                variant="gradient"
-                color="info"
-                fullWidth
-              >
-                sign in
-              </MDButton>
-            </MDBox>
-            <MDBox
-              mt={3}
-              mb={1}
               textAlign="center"
+              mb={3}
             >
-              <MDTypography
-                variant="button"
-                color="text"
+              <Typography
+                variant="h4"
+                fontWeight="bold"
+                gutterBottom
               >
-                Already have an account?{" "}
-                <MDTypography
-                  component={Link}
-                  to="/authentication/sign-in"
-                  variant="button"
-                  color="info"
-                  fontWeight="medium"
-                  textGradient
-                >
-                  Sign In
-                </MDTypography>
-              </MDTypography>
+                Create Your Account
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+              >
+                Fill in your details to create an account.
+              </Typography>
             </MDBox>
-          </MDBox>
+
+            {/* Form Fields */}
+            <MDBox
+              component="form"
+              role="form"
+            >
+              <MDBox mb={2}>
+                <MDInput
+                  type="text"
+                  label="Full Name"
+                  variant="outlined"
+                  fullWidth
+                  required
+                />
+              </MDBox>
+              <MDBox mb={2}>
+                <MDInput
+                  type="email"
+                  label="Email Address"
+                  variant="outlined"
+                  fullWidth
+                  required
+                />
+              </MDBox>
+              <MDBox mb={2}>
+                <MDInput
+                  type="password"
+                  label="Password"
+                  variant="outlined"
+                  fullWidth
+                  required
+                />
+              </MDBox>
+
+              {/* Terms and Conditions */}
+              <MDBox
+                display="flex"
+                alignItems="center"
+                mt={2}
+              >
+                <Checkbox color="primary" />
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                >
+                  I agree to the{" "}
+                  <Link
+                    to="#"
+                    style={{ textDecoration: "none", color: "#007bff" }}
+                  >
+                    Terms and Conditions
+                  </Link>
+                </Typography>
+              </MDBox>
+
+              {/* Submit Button */}
+              <MDBox
+                mt={4}
+                mb={2}
+              >
+                <MDButton
+                  variant="gradient"
+                  color="info"
+                  fullWidth
+                  size="large"
+                >
+                  Sign Up
+                </MDButton>
+              </MDBox>
+
+              {/* Redirect to Sign In */}
+              <MDBox
+                textAlign="center"
+                mt={3}
+              >
+                <Typography variant="body2">
+                  Already have an account?{" "}
+                  <Link
+                    to="/authentication/sign-in"
+                    style={{
+                      textDecoration: "none",
+                      color: "#007bff",
+                      fontWeight: "bold"
+                    }}
+                  >
+                    Sign In
+                  </Link>
+                </Typography>
+              </MDBox>
+            </MDBox>
+          </Card>
         </MDBox>
-      </Card>
-    </CoverLayout>
+      </MDBox>
+      <Footer />
+    </DashboardLayout>
   );
 }
 
-export default Cover;
+export default SignUp;

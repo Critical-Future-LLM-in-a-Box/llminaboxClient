@@ -3,8 +3,6 @@ import color from "color";
 import { Button, ButtonGroup, Modal, Box, Typography } from "@mui/material";
 import { HeaderAvatar } from "@/assistant/components/Avatar";
 import { useContextData } from "@/assistant/context";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
 
 export default function ChatbotHeader(): JSX.Element {
   const [chatData, dispatch] = useContextData();
@@ -64,43 +62,6 @@ export default function ChatbotHeader(): JSX.Element {
         }}
       >
         <HeaderAvatar />
-
-        <ButtonGroup>
-          <Button
-            variant="outlined"
-            onClick={() => setHistoryModalOpen(true)}
-          >
-            History
-          </Button>
-
-          <Button
-            variant="outlined"
-            style={{
-              color: chatData.config.chatMemory ? undefined : "red"
-            }}
-            onClick={() => {
-              dispatch({
-                type: "SET_CHAT_MEMORY",
-                payload: !chatData.config.chatMemory
-              });
-            }}
-            endIcon={chatData.config.chatMemory ? <CheckIcon /> : <CloseIcon />}
-          >
-            <span>Memory</span>
-          </Button>
-
-          <Button
-            variant="outlined"
-            onClick={() =>
-              dispatch({
-                type: "CLEAR_CHAT",
-                payload: ""
-              })
-            }
-          >
-            Clear
-          </Button>
-        </ButtonGroup>
       </div>
 
       <Modal

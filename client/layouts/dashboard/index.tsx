@@ -18,30 +18,41 @@ import {
   Box
 } from "@mui/material";
 import { Edit, Delete, Message } from "@mui/icons-material";
-
 import MDBox from "@/client/components/MDBox";
 import MDButton from "@/client/components/MDButton";
 import MDInput from "@/client/components/MDInput";
 import MDAvatar from "@/client/components/MDAvatar";
-
 import DashboardLayout from "@/client/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "@/client/examples/Navbars/DashboardNavbar";
 import Footer from "@/client/examples/Footer";
 
+interface MessageHistory {
+  text: string;
+  timestamp: string;
+}
+
+interface Assistant {
+  name: string;
+  description: string;
+  voice: string;
+  avatar: string | null;
+  messageHistory: MessageHistory[];
+}
+
 export default function Dashboard() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [voice, setVoice] = useState("Google US English");
-  const [avatar, setAvatar] = useState(null);
-  const [assistants, setAssistants] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [openMessages, setOpenMessages] = useState(false);
-  const [messageHistory, setMessageHistory] = useState([]);
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [voice, setVoice] = useState<string>("Google US English");
+  const [avatar, setAvatar] = useState<string | null>(null);
+  const [assistants, setAssistants] = useState<Assistant[]>([]);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const [open, setOpen] = useState<boolean>(false);
+  const [openMessages, setOpenMessages] = useState<boolean>(false);
+  const [messageHistory, setMessageHistory] = useState<MessageHistory[]>([]);
 
   // Dummy data for message history
-  const dummyMessageHistory = [
+  const dummyMessageHistory: MessageHistory[] = [
     {
       text: "Hello, how can I assist you today?",
       timestamp: "2024-10-01 10:00"
@@ -52,7 +63,7 @@ export default function Dashboard() {
 
   // Add dummy data for assistants
   useEffect(() => {
-    const dummyData = [
+    const dummyData: Assistant[] = [
       {
         name: "Assistant 1",
         description: "This is the first assistant",
@@ -80,7 +91,7 @@ export default function Dashboard() {
   }, []);
 
   const handleCreateOrUpdateAssistant = () => {
-    const newAssistant = {
+    const newAssistant: Assistant = {
       name,
       description,
       voice,
@@ -88,7 +99,7 @@ export default function Dashboard() {
       messageHistory: dummyMessageHistory
     };
 
-    if (isEditing) {
+    if (isEditing && currentIndex !== null) {
       const updatedAssistants = assistants.map((assistant, index) =>
         index === currentIndex ? newAssistant : assistant
       );
@@ -101,18 +112,18 @@ export default function Dashboard() {
     resetForm();
   };
 
-  const handleAvatarUpload = (event) => {
-    const file = event.target.files[0];
+  const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setAvatar(e.target.result);
+        if (e.target) setAvatar(e.target.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleEditAssistant = (index) => {
+  const handleEditAssistant = (index: number) => {
     const assistant = assistants[index];
     setName(assistant.name);
     setDescription(assistant.description);
@@ -123,12 +134,12 @@ export default function Dashboard() {
     setOpen(true);
   };
 
-  const handleDeleteAssistant = (index) => {
+  const handleDeleteAssistant = (index: number) => {
     const updatedAssistants = assistants.filter((_, i) => i !== index);
     setAssistants(updatedAssistants);
   };
 
-  const handleShowMessages = (index) => {
+  const handleShowMessages = (index: number) => {
     const assistant = assistants[index];
     setMessageHistory(assistant.messageHistory);
     setOpenMessages(true);
@@ -227,6 +238,39 @@ export default function Dashboard() {
             {isEditing ? "Edit Assistant" : "Create Assistant"}
           </DialogTitle>
           <DialogContent>
+            <MDBox
+              mb={2}
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              gap={4}
+            >
+              {avatar ? (
+                <MDAvatar
+                  alt="Assistant Avatar"
+                  src={avatar}
+                  sx={{ width: 80, height: 80 }}
+                />
+              ) : (
+                <Avatar sx={{ width: 80, height: 80 }}>A</Avatar>
+              )}
+
+              <MDButton
+                component="label"
+                color="info"
+                variant="contained"
+              >
+                Upload Avatar
+                <input
+                  accept="image/*"
+                  type="file"
+                  hidden
+                  onChange={handleAvatarUpload}
+                />
+              </MDButton>
+            </MDBox>
+
             <MDBox mb={2}>
               <MDInput
                 label="Assistant Name"
@@ -256,41 +300,12 @@ export default function Dashboard() {
                 value={voice}
                 onChange={(e) => setVoice(e.target.value)}
                 fullWidth
+                sx={{ "& > div": { padding: "10px" } }}
               >
                 <MenuItem value="Google US English">Google US English</MenuItem>
                 <MenuItem value="Google UK English">Google UK English</MenuItem>
               </MDInput>
             </MDBox>
-
-            <MDBox
-              mb={2}
-              display="flex"
-              justifyContent="center"
-            >
-              {avatar ? (
-                <MDAvatar
-                  alt="Assistant Avatar"
-                  src={avatar}
-                  sx={{ width: 80, height: 80 }}
-                />
-              ) : (
-                <Avatar sx={{ width: 80, height: 80 }}>A</Avatar>
-              )}
-            </MDBox>
-
-            <MDButton
-              component="label"
-              color="info"
-              variant="contained"
-            >
-              Upload Avatar
-              <input
-                accept="image/*"
-                type="file"
-                hidden
-                onChange={handleAvatarUpload}
-              />
-            </MDButton>
           </DialogContent>
           <DialogActions>
             <MDButton

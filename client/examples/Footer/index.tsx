@@ -13,6 +13,8 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
+import React from "react";
+
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
@@ -72,21 +74,7 @@ function Footer({ company, links }) {
         fontSize={size.sm}
         px={1.5}
       >
-        &copy; {new Date().getFullYear()}, made with
-        <MDBox
-          fontSize={size.md}
-          color="text"
-          mb={-0.5}
-          mx={0.25}
-        >
-          <Icon
-            color="inherit"
-            fontSize="inherit"
-          >
-            favorite
-          </Icon>
-        </MDBox>
-        by
+        &copy; {new Date().getFullYear()} Powered by
         <Link
           href={href}
           target="_blank"
@@ -98,7 +86,6 @@ function Footer({ company, links }) {
             &nbsp;{name}&nbsp;
           </MDTypography>
         </Link>
-        for a better web.
       </MDBox>
       <MDBox
         component="ul"
@@ -125,12 +112,19 @@ function Footer({ company, links }) {
 
 // Setting default values for the props of Footer
 Footer.defaultProps = {
-  company: { href: "https://www.creative-tim.com/", name: "Creative Tim" },
+  company: {
+    href: "https://criticalfutureglobal.com/",
+    name: "Critical Future"
+  },
   links: [
-    { href: "https://www.creative-tim.com/", name: "Creative Tim" },
-    { href: "https://www.creative-tim.com/presentation", name: "About Us" },
-    { href: "https://www.creative-tim.com/blog", name: "Blog" },
-    { href: "https://www.creative-tim.com/license", name: "License" }
+    {
+      href: "https://criticalfutureglobal.com/llm-in-a-box-a-revolutionary-ai-solution-2/",
+      name: "LLM in a Box"
+    },
+    {
+      href: "https://criticalfutureglobal.com/company-overview/",
+      name: "About Us"
+    }
   ]
 };
 

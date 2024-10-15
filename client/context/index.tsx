@@ -1,52 +1,34 @@
-import { default as React, createContext, useContext } from "react";
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  Dispatch,
+  useMemo
+} from "react";
 import { useImmerReducer } from "use-immer";
 
-/**
- * Context for the application state
- */
-export const appContext = createContext();
-
-/**
- * Custom hook to use the app context
- * @returns {Object} - The app context
- */
-export function useAppContext() {
-  return useContext(appContext);
+export interface AppState {
+  miniSidenav: boolean;
+  transparentSidenav: boolean;
+  whiteSidenav: boolean;
+  sidenavColor: string;
+  transparentNavbar: boolean;
+  fixedNavbar: boolean;
+  openConfigurator: boolean;
+  darkMode: boolean;
 }
 
-/**
- * AppContextProvider component to provide global state to its children
- * @param {Object} props - React component props
- * @param {React.ReactNode} props.children - Children components that need access to the context
- * @returns {JSX.Element} - App context provider with the global state
- */
-export function AppContextProvider({ children }) {
-  const initialState = {
-    miniSidenav: false,
-    transparentSidenav: false,
-    whiteSidenav: false,
-    sidenavColor: "info",
-    transparentNavbar: true,
-    fixedNavbar: true,
-    openConfigurator: false,
-    direction: "ltr",
-    layout: "dashboard",
-    darkMode: false
-  };
+export type ActionType =
+  | { type: "MINI_SIDENAV"; value: boolean }
+  | { type: "TRANSPARENT_SIDENAV"; value: boolean }
+  | { type: "WHITE_SIDENAV"; value: boolean }
+  | { type: "SIDENAV_COLOR"; value: string }
+  | { type: "TRANSPARENT_NAVBAR"; value: boolean }
+  | { type: "FIXED_NAVBAR"; value: boolean }
+  | { type: "OPEN_CONFIGURATOR"; value: boolean }
+  | { type: "DARKMODE"; value: boolean };
 
-  const contextData = useImmerReducer(reducer, initialState);
-
-  return (
-    <appContext.Provider value={contextData}>{children}</appContext.Provider>
-  );
-}
-
-/**
- * Reducer function to manage the app state
- * @param {Object} draft - Draft state (immutable)
- * @param {Object} action - Action containing the type and value to update the state
- */
-function reducer(draft, action) {
+function reducer(draft: AppState, action: ActionType) {
   switch (action.type) {
     case "MINI_SIDENAV":
       draft.miniSidenav = action.value;
@@ -69,12 +51,6 @@ function reducer(draft, action) {
     case "OPEN_CONFIGURATOR":
       draft.openConfigurator = action.value;
       break;
-    case "DIRECTION":
-      draft.direction = action.value;
-      break;
-    case "LAYOUT":
-      draft.layout = action.value;
-      break;
     case "DARKMODE":
       draft.darkMode = action.value;
       break;
@@ -83,82 +59,34 @@ function reducer(draft, action) {
   }
 }
 
-/**
- * Dispatch action to toggle mini sidenav
- * @param {Function} dispatch - Dispatch function from the reducer
- * @param {boolean} value - New value for miniSidenav
- */
-export const setMiniSidenav = (dispatch, value) =>
-  dispatch({ type: "MINI_SIDENAV", value });
+export const defaultState: AppState = {
+  miniSidenav: false,
+  transparentSidenav: false,
+  whiteSidenav: false,
+  sidenavColor: "info",
+  transparentNavbar: true,
+  fixedNavbar: true,
+  openConfigurator: false,
+  darkMode: false
+};
 
-/**
- * Dispatch action to toggle transparent sidenav
- * @param {Function} dispatch - Dispatch function from the reducer
- * @param {boolean} value - New value for transparentSidenav
- */
-export const setTransparentSidenav = (dispatch, value) =>
-  dispatch({ type: "TRANSPARENT_SIDENAV", value });
+export const AppContext = createContext<[AppState, Dispatch<ActionType>]>([
+  defaultState,
+  () => {}
+]);
 
-/**
- * Dispatch action to toggle white sidenav
- * @param {Function} dispatch - Dispatch function from the reducer
- * @param {boolean} value - New value for whiteSidenav
- */
-export const setWhiteSidenav = (dispatch, value) =>
-  dispatch({ type: "WHITE_SIDENAV", value });
+export function useAppContext() {
+  return useContext(AppContext);
+}
 
-/**
- * Dispatch action to set the sidenav color
- * @param {Function} dispatch - Dispatch function from the reducer
- * @param {string} value - New value for sidenavColor
- */
-export const setSidenavColor = (dispatch, value) =>
-  dispatch({ type: "SIDENAV_COLOR", value });
+export function AppContextProvider({ children }: { children: ReactNode }) {
+  const [state, dispatch] = useImmerReducer(reducer, defaultState);
+  const providedValue: [AppState, Dispatch<ActionType>] = useMemo(
+    () => [state, dispatch],
+    [state, dispatch]
+  );
 
-/**
- * Dispatch action to toggle transparent navbar
- * @param {Function} dispatch - Dispatch function from the reducer
- * @param {boolean} value - New value for transparentNavbar
- */
-export const setTransparentNavbar = (dispatch, value) =>
-  dispatch({ type: "TRANSPARENT_NAVBAR", value });
-
-/**
- * Dispatch action to toggle fixed navbar
- * @param {Function} dispatch - Dispatch function from the reducer
- * @param {boolean} value - New value for fixedNavbar
- */
-export const setFixedNavbar = (dispatch, value) =>
-  dispatch({ type: "FIXED_NAVBAR", value });
-
-/**
- * Dispatch action to toggle open configurator
- * @param {Function} dispatch - Dispatch function from the reducer
- * @param {boolean} value - New value for openConfigurator
- */
-export const setOpenConfigurator = (dispatch, value) =>
-  dispatch({ type: "OPEN_CONFIGURATOR", value });
-
-/**
- * Dispatch action to set the layout direction (ltr/rtl)
- * @param {Function} dispatch - Dispatch function from the reducer
- * @param {string} value - New value for direction (ltr/rtl)
- */
-export const setDirection = (dispatch, value) =>
-  dispatch({ type: "DIRECTION", value });
-
-/**
- * Dispatch action to set the layout type
- * @param {Function} dispatch - Dispatch function from the reducer
- * @param {string} value - New value for layout (e.g. 'dashboard')
- */
-export const setLayout = (dispatch, value) =>
-  dispatch({ type: "LAYOUT", value });
-
-/**
- * Dispatch action to toggle dark mode
- * @param {Function} dispatch - Dispatch function from the reducer
- * @param {boolean} value - New value for darkMode
- */
-export const setDarkMode = (dispatch, value) =>
-  dispatch({ type: "DARKMODE", value });
+  return (
+    <AppContext.Provider value={providedValue}>{children}</AppContext.Provider>
+  );
+}

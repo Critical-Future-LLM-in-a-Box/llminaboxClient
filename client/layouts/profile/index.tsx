@@ -1,267 +1,323 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
-import Grid from "@mui/material/Grid";
-import Divider from "@mui/material/Divider";
-
-// @mui icons
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-
-// Material Dashboard 2 React components
+import React, { useState } from "react";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Avatar,
+  Typography,
+  Box,
+  Button,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  LinearProgress,
+  Divider,
+  Paper
+} from "@mui/material";
 import MDBox from "@/client/components/MDBox";
-import MDTypography from "@/client/components/MDTypography";
-
-// Material Dashboard 2 React example components
+import MDButton from "@/client/components/MDButton";
 import DashboardLayout from "@/client/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "@/client/examples/Navbars/DashboardNavbar";
 import Footer from "@/client/examples/Footer";
-import ProfileInfoCard from "@/client/examples/Cards/InfoCards/ProfileInfoCard";
-import ProfilesList from "@/client/examples/Lists/ProfilesList";
-import DefaultProjectCard from "@/client/examples/Cards/ProjectCards/DefaultProjectCard";
 
-// Overview page components
-import Header from "@/client/layouts/profile/components/Header";
-import PlatformSettings from "@/client/layouts/profile/components/PlatformSettings";
+export default function Profile() {
+  // State for profile information
+  const [name, setName] = useState("Jane Doe");
+  const [companyName, setCompanyName] = useState("ChatBot Corp");
+  const [email, setEmail] = useState("janedoe@chatbotcorp.com");
+  const [phone, setPhone] = useState("+123456789");
+  const [industry, setIndustry] = useState("Customer Service");
+  const [numAssistants, setNumAssistants] = useState(5); // Number of AI assistants created
+  const [avatar, setAvatar] = useState("https://via.placeholder.com/80");
+  const [open, setOpen] = useState(false);
 
-// Data
-import profilesListData from "@/client/layouts/profile/data/profilesListData";
+  // Helper function to calculate profile completion
+  function calculateProfileCompletion() {
+    const fields = [name, companyName, email, phone, industry];
+    const completedFields = fields.filter((field) => field !== "").length;
+    return (completedFields / fields.length) * 100;
+  }
 
-// Images
-import homeDecor1 from "@/client/assets/images/home-decor-1.jpg";
-import homeDecor2 from "@/client/assets/images/home-decor-2.jpg";
-import homeDecor3 from "@/client/assets/images/home-decor-3.jpg";
-import homeDecor4 from "@/client/assets/images/home-decor-4.jpeg";
-import team1 from "@/client/assets/images/team-1.jpg";
-import team2 from "@/client/assets/images/team-2.jpg";
-import team3 from "@/client/assets/images/team-3.jpg";
-import team4 from "@/client/assets/images/team-4.jpg";
+  const profileCompletion = calculateProfileCompletion();
 
-function Overview() {
+  const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setAvatar(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleEditProfile = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSave = () => {
+    setOpen(false);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox mb={2} />
-      <Header>
-        <MDBox
-          mt={5}
-          mb={3}
+      <MDBox p={3}>
+        <Grid
+          container
+          spacing={3}
         >
+          {/* Left Column - Profile Summary */}
           <Grid
-            container
-            spacing={1}
+            item
+            xs={12}
+            md={4}
           >
-            <Grid
-              item
-              xs={12}
-              md={6}
-              xl={4}
-            >
-              <PlatformSettings />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={6}
-              xl={4}
-              sx={{ display: "flex" }}
-            >
-              <Divider
-                orientation="vertical"
-                sx={{ ml: -2, mr: 1 }}
-              />
-              <ProfileInfoCard
-                title="profile information"
-                description="Hi, I’m Alec Thompson, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
-                info={{
-                  fullName: "Alec M. Thompson",
-                  mobile: "(44) 123 1234 123",
-                  email: "alecthompson@mail.com",
-                  location: "USA"
-                }}
-                social={[
-                  {
-                    link: "https://www.facebook.com/CreativeTim/",
-                    icon: <FacebookIcon />,
-                    color: "facebook"
-                  },
-                  {
-                    link: "https://twitter.com/creativetim",
-                    icon: <TwitterIcon />,
-                    color: "twitter"
-                  },
-                  {
-                    link: "https://www.instagram.com/creativetimofficial/",
-                    icon: <InstagramIcon />,
-                    color: "instagram"
-                  }
-                ]}
-                action={{ route: "", tooltip: "Edit Profile" }}
-                shadow={false}
-              />
-              <Divider
-                orientation="vertical"
-                sx={{ mx: 0 }}
-              />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              xl={4}
-            >
-              <ProfilesList
-                title="conversations"
-                profiles={profilesListData}
-                shadow={false}
-              />
-            </Grid>
+            <Card>
+              <CardContent>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  textAlign="center"
+                >
+                  <Avatar
+                    alt={name}
+                    src={avatar}
+                    sx={{ width: 120, height: 120, mb: 2 }}
+                  />
+                  <Typography
+                    variant="h5"
+                    gutterBottom
+                  >
+                    {name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                  >
+                    {companyName}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                  >
+                    {email}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                  >
+                    {phone}
+                  </Typography>
+                  <MDButton
+                    color="info"
+                    onClick={handleEditProfile}
+                    sx={{ mt: 2 }}
+                  >
+                    Edit Profile
+                  </MDButton>
+                </Box>
+              </CardContent>
+            </Card>
           </Grid>
-        </MDBox>
-        <MDBox
-          pt={2}
-          px={2}
-          lineHeight={1.25}
+
+          {/* Right Column - Additional Info */}
+          <Grid
+            item
+            xs={12}
+            md={8}
+          >
+            <Paper
+              elevation={3}
+              sx={{ p: 3, mb: 3 }}
+            >
+              <Typography
+                variant="h6"
+                gutterBottom
+              >
+                Profile Completion
+              </Typography>
+              <LinearProgress
+                variant="determinate"
+                value={profileCompletion}
+                sx={{ mb: 2 }}
+              />
+              <Typography
+                variant="body2"
+                color="textSecondary"
+              >
+                {profileCompletion}% completed
+              </Typography>
+            </Paper>
+
+            <Paper
+              elevation={3}
+              sx={{ p: 3, mb: 3 }}
+            >
+              <Typography
+                variant="h6"
+                gutterBottom
+              >
+                Business Information
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+              >
+                Industry: {industry}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+              >
+                Number of Assistants Created: {numAssistants}
+              </Typography>
+              <MDButton
+                color="info"
+                onClick={() => alert("Manage Assistants Feature Coming Soon!")}
+                sx={{ mt: 2 }}
+              >
+                Manage Assistants
+              </MDButton>
+            </Paper>
+
+            <Paper
+              elevation={3}
+              sx={{ p: 3 }}
+            >
+              <Typography
+                variant="h6"
+                gutterBottom
+              >
+                Subscription & Plan Details
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+              >
+                Current Plan: Premium
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+              >
+                Next Billing Date: November 10, 2024
+              </Typography>
+              <MDButton
+                color="success"
+                onClick={() => alert("Upgrade Plan Feature Coming Soon!")}
+                sx={{ mt: 2 }}
+              >
+                Upgrade Plan
+              </MDButton>
+            </Paper>
+          </Grid>
+        </Grid>
+
+        {/* Edit Profile Dialog */}
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          fullWidth
+          maxWidth="sm"
         >
-          <MDTypography
-            variant="h6"
-            fontWeight="medium"
-          >
-            Projects
-          </MDTypography>
-          <MDBox mb={1}>
-            <MDTypography
-              variant="button"
-              color="text"
+          <DialogTitle>Edit Profile</DialogTitle>
+          <DialogContent>
+            <MDBox
+              mb={2}
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              gap={4}
             >
-              Architects design houses
-            </MDTypography>
-          </MDBox>
-        </MDBox>
-        <MDBox p={2}>
-          <Grid
-            container
-            spacing={6}
-          >
-            <Grid
-              item
-              xs={12}
-              md={6}
-              xl={3}
-            >
-              <DefaultProjectCard
-                image={homeDecor1}
-                label="project #2"
-                title="modern"
-                description="As Uber works through a huge amount of internal management turmoil."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project"
-                }}
-                authors={[
-                  { image: team1, name: "Elena Morison" },
-                  { image: team2, name: "Ryan Milly" },
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team4, name: "Peterson" }
-                ]}
+              <Avatar
+                alt={name}
+                src={avatar}
+                sx={{ width: 100, height: 100 }}
               />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={6}
-              xl={3}
-            >
-              <DefaultProjectCard
-                image={homeDecor2}
-                label="project #1"
-                title="scandinavian"
-                description="Music is something that everyone has their own specific opinion about."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project"
-                }}
-                authors={[
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team4, name: "Peterson" },
-                  { image: team1, name: "Elena Morison" },
-                  { image: team2, name: "Ryan Milly" }
-                ]}
+
+              <MDButton
+                component="label"
+                color="info"
+                variant="contained"
+              >
+                Upload Avatar
+                <input
+                  accept="image/*"
+                  type="file"
+                  hidden
+                  onChange={handleAvatarUpload}
+                />
+              </MDButton>
+            </MDBox>
+
+            <MDBox mb={2}>
+              <TextField
+                label="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                fullWidth
               />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={6}
-              xl={3}
-            >
-              <DefaultProjectCard
-                image={homeDecor3}
-                label="project #3"
-                title="minimalist"
-                description="Different people have different taste, and various types of music."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project"
-                }}
-                authors={[
-                  { image: team4, name: "Peterson" },
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team2, name: "Ryan Milly" },
-                  { image: team1, name: "Elena Morison" }
-                ]}
+            </MDBox>
+            <MDBox mb={2}>
+              <TextField
+                label="Company Name"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                fullWidth
               />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={6}
-              xl={3}
-            >
-              <DefaultProjectCard
-                image={homeDecor4}
-                label="project #4"
-                title="gothic"
-                description="Why would anyone pick blue over pink? Pink is obviously a better color."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project"
-                }}
-                authors={[
-                  { image: team4, name: "Peterson" },
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team2, name: "Ryan Milly" },
-                  { image: team1, name: "Elena Morison" }
-                ]}
+            </MDBox>
+            <MDBox mb={2}>
+              <TextField
+                label="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                fullWidth
               />
-            </Grid>
-          </Grid>
-        </MDBox>
-      </Header>
+            </MDBox>
+            <MDBox mb={2}>
+              <TextField
+                label="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                fullWidth
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <TextField
+                label="Industry"
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+                fullWidth
+              />
+            </MDBox>
+          </DialogContent>
+          <DialogActions>
+            <MDButton
+              onClick={handleClose}
+              color="secondary"
+            >
+              Cancel
+            </MDButton>
+            <MDButton
+              onClick={handleSave}
+              color="success"
+            >
+              Save
+            </MDButton>
+          </DialogActions>
+        </Dialog>
+      </MDBox>
       <Footer />
     </DashboardLayout>
   );
 }
-
-export default Overview;

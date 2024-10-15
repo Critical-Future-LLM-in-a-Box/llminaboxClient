@@ -1,107 +1,73 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-import { useEffect } from "react";
-
-// react-router-dom components
+import React, { useEffect } from "react";
 import { useLocation, NavLink } from "react-router-dom";
+import { List, Divider, Link, Icon } from "@mui/material";
 
-// prop-types is a library for typechecking of props.
-import PropTypes from "prop-types";
-
-// @mui material components
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import Link from "@mui/material/Link";
-import Icon from "@mui/material/Icon";
-
-// Material Dashboard 2 React components
+// Custom components
 import MDBox from "@/client/components/MDBox";
 import MDTypography from "@/client/components/MDTypography";
-import MDButton from "@/client/components/MDButton";
-
-// Material Dashboard 2 React example components
 import SidenavCollapse from "@/client/examples/Sidenav/SidenavCollapse";
-
-// Custom styles for the Sidenav
 import SidenavRoot from "@/client/examples/Sidenav/SidenavRoot";
 import sidenavLogoLabel from "@/client/examples/Sidenav/styles/sidenav";
 
-// Material Dashboard 2 React context
-import {
-  useAppContext,
-  setMiniSidenav,
-  setTransparentSidenav,
-  setWhiteSidenav
-} from "@/client/context";
+// App context
+import { useAppContext } from "@/client/context";
 
-function Sidenav({ color, brand, brandName, routes, ...rest }) {
+// Types
+interface Route {
+  name?: string;
+  route?: string;
+  type?: string;
+  component?: React.ReactNode;
+  icon?: React.ReactNode;
+}
+
+interface SidenavProps {
+  color?: string;
+  brand?: string;
+  brandName: string;
+  routes: Route[];
+}
+
+const Sidenav: React.FC<SidenavProps> = ({ brand, brandName, routes }) => {
   const [controller, dispatch] = useAppContext();
-  const {
-    miniSidenav,
-    transparentSidenav,
-    whiteSidenav,
-    darkMode,
-    sidenavColor
-  } = controller;
+  const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } =
+    controller;
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
 
-  let textColor = "white";
+  // Determine text color based on the sidenav's state
+  const textColor =
+    transparentSidenav || (whiteSidenav && !darkMode) ? "dark" : "white";
 
-  if (transparentSidenav || (whiteSidenav && !darkMode)) {
-    textColor = "dark";
-  } else if (whiteSidenav && darkMode) {
-    textColor = "inherit";
-  }
+  // Close sidenav when mini version is activated
+  const closeSidenav = () => dispatch({ type: "MINI_SIDENAV", value: true });
 
-  const closeSidenav = () => setMiniSidenav(dispatch, true);
-
+  // Adjust sidenav state based on screen size
   useEffect(() => {
-    // A function that sets the mini state of the sidenav.
-    function handleMiniSidenav() {
-      setMiniSidenav(dispatch, window.innerWidth < 1200);
-      setTransparentSidenav(
-        dispatch,
-        window.innerWidth < 1200 ? false : transparentSidenav
-      );
-      setWhiteSidenav(
-        dispatch,
-        window.innerWidth < 1200 ? false : whiteSidenav
-      );
-    }
+    const handleMiniSidenav = () => {
+      const isMobileView = window.innerWidth < 1200;
+      dispatch({ type: "MINI_SIDENAV", value: isMobileView });
+      dispatch({
+        type: "TRANSPARENT_SIDENAV",
+        value: isMobileView ? false : transparentSidenav
+      });
+      dispatch({
+        type: "WHITE_SIDENAV",
+        value: isMobileView ? false : whiteSidenav
+      });
+    };
 
-    /**
-     The event listener that's calling the handleMiniSidenav function when resizing the window.
-    */
     window.addEventListener("resize", handleMiniSidenav);
-
-    // Call the handleMiniSidenav function to set the state with the initial value.
     handleMiniSidenav();
 
-    // Remove event listener on cleanup
     return () => window.removeEventListener("resize", handleMiniSidenav);
-  }, [dispatch, location]);
+  }, [dispatch, transparentSidenav, whiteSidenav]);
 
-  // Render all the routes from the routes.js (All the visible items on the Sidenav)
+  // Render all the routes
   const renderRoutes = routes.map(
-    ({ type, name, icon, title, noCollapse, key, href, route }) => {
-      let returnValue;
-
+    ({ type, name, icon, title, key, href, route, noCollapse }) => {
       if (type === "collapse") {
-        returnValue = href ? (
+        return href ? (
           <Link
             href={href}
             key={key}
@@ -110,8 +76,8 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
             sx={{ textDecoration: "none" }}
           >
             <SidenavCollapse
-              name={name}
-              icon={icon}
+              name={name!}
+              icon={icon!}
               active={key === collapseName}
               noCollapse={noCollapse}
             />
@@ -119,17 +85,18 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         ) : (
           <NavLink
             key={key}
-            to={route}
+            to={route!}
           >
             <SidenavCollapse
-              name={name}
-              icon={icon}
+              name={name!}
+              icon={icon!}
               active={key === collapseName}
+              noCollapse={noCollapse}
             />
           </NavLink>
         );
       } else if (type === "title") {
-        returnValue = (
+        return (
           <MDTypography
             key={key}
             color={textColor}
@@ -146,24 +113,23 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           </MDTypography>
         );
       } else if (type === "divider") {
-        returnValue = (
+        return (
           <Divider
             key={key}
             light={
-              (!darkMode && !whiteSidenav && !transparentSidenav) ||
-              (darkMode && !transparentSidenav && whiteSidenav)
+              darkMode
+                ? !transparentSidenav && whiteSidenav
+                : !whiteSidenav && !transparentSidenav
             }
           />
         );
       }
-
-      return returnValue;
+      return null;
     }
   );
 
   return (
     <SidenavRoot
-      {...rest}
       variant="permanent"
       ownerState={{ transparentSidenav, whiteSidenav, miniSidenav, darkMode }}
     >
@@ -220,51 +186,14 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       </MDBox>
       <Divider
         light={
-          (!darkMode && !whiteSidenav && !transparentSidenav) ||
-          (darkMode && !transparentSidenav && whiteSidenav)
+          darkMode
+            ? !transparentSidenav && whiteSidenav
+            : !whiteSidenav && !transparentSidenav
         }
       />
       <List>{renderRoutes}</List>
-      <MDBox
-        p={2}
-        mt="auto"
-      >
-        <MDButton
-          component="a"
-          href="https://www.creative-tim.com/product/material-dashboard-pro-react"
-          target="_blank"
-          rel="noreferrer"
-          variant="gradient"
-          color={sidenavColor}
-          fullWidth
-        >
-          upgrade to pro
-        </MDButton>
-      </MDBox>
     </SidenavRoot>
   );
-}
-
-// Setting default values for the props of Sidenav
-Sidenav.defaultProps = {
-  color: "info",
-  brand: ""
-};
-
-// Typechecking props for the Sidenav
-Sidenav.propTypes = {
-  color: PropTypes.oneOf([
-    "primary",
-    "secondary",
-    "info",
-    "success",
-    "warning",
-    "error",
-    "dark"
-  ]),
-  brand: PropTypes.string,
-  brandName: PropTypes.string.isRequired,
-  routes: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 export default Sidenav;

@@ -12,10 +12,13 @@ import App from "@/client/App";
  * - Router: Wraps the application with React Router to enable routing.
  * - App: Main component of the application.
  */
-createRoot(document.getElementById("root")).render(
-  <AppContextProvider>
-    <Router>
-      <App />
-    </Router>
-  </AppContextProvider>
-);
+const rootElement = document.getElementById("root");
+if (rootElement) {
+  createRoot(rootElement).render(
+    <AppContextProvider>
+      <Router>
+        <App />
+      </Router>
+    </AppContextProvider>
+  );
+}

@@ -25,14 +25,14 @@ import PropTypes from "prop-types";
 import MDBox from "@/client/components/MDBox";
 
 // Material Dashboard 2 React context
-import { useAppContext, setLayout } from "@/client/context";
+import { useAppContext } from "@/client/context";
 
 function PageLayout({ background, children }) {
   const [, dispatch] = useAppContext();
   const { pathname } = useLocation();
 
   useEffect(() => {
-    setLayout(dispatch, "page");
+    dispatch({ type: "LAYOUT", value: "page" });
   }, [pathname]);
 
   return (

@@ -66,6 +66,7 @@ export function ChatAvatar(): JSX.Element {
       </div>
       <Button
         variant="outlined"
+        sx={{ width: "100%", color: "gray" }}
         onClick={() => {
           if (isVideoOn) {
             videoRef.current?.pause();
