@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Chatbot from "@/assistant/components/Chatbot";
-import { ContextProvider, Config } from "@/assistant/context";
-import "@/assistant/index.css";
+import Chatbot from "./components/Chatbot";
+import { ContextProvider, Config } from "./context";
+import "./index.css";
 
 export const initConfig: Config = {
   apiHost: "https://llm.criticalfutureglobal.com",

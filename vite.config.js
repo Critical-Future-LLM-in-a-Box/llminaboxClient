@@ -8,7 +8,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         client: "index.html",
-        assistant: "assistant/index.tsx"
+        assistant: "src/assistant/index.tsx"
       },
       output: {
         entryFileNames: (chunkInfo) => {
