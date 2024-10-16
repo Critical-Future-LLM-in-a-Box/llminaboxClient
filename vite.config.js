@@ -4,11 +4,6 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
-  resolve: {
-    alias: {
-      "@": __dirname
-    }
-  },
   build: {
     rollupOptions: {
       input: {

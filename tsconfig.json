@@ -14,9 +14,9 @@
     "allowJs": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["client", "assistant"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

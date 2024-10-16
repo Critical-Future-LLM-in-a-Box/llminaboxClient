@@ -1,8 +1,5 @@
 export default {
-  content: [
-    "./assistant/**/*.{html,js,jsx,ts,tsx}",
-    "./client/**/*.{html,js,jsx,ts,tsx}"
-  ],
+  content: ["src/**/*.{html,js,jsx,ts,tsx}"],
   presets: [],
   darkMode: "media",
   theme: {
