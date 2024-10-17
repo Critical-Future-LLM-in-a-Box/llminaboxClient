@@ -14,6 +14,28 @@ import StarIcon from "@mui/icons-material/Star";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const Pricing = () => {
+  const redirectToCheckout = async (billingCycle) => {
+    try {
+        const response = await fetch('/pay/create-checkout-session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({billingCycle}),
+        });
+        const data = await response.json();
+        if (data.checkoutUrl) {
+            window.location.href = data.checkoutUrl;
+
+        } else {
+            alert('Failed to proceed to checkout, please try again later.');
+        }
+    } catch (error) {
+        console.error('Error during checkout:', error);
+        alert('An error occurred, please try again later');
+    }
+};
+
   return (
     <Box p={3}>
       <Container maxWidth="lg">
@@ -33,7 +55,7 @@ const Pricing = () => {
             variant="body1"
             color="textSecondary"
           >
-            Choose the best plan that suits your AI assistant needs.
+            Unlock the AI assistant experience tailored to your needs
           </Typography>
         </Box>
 
@@ -43,7 +65,7 @@ const Pricing = () => {
           spacing={3}
           justifyContent="center"
         >
-          {/* Basic Plan */}
+          {/* Monthly Plan */}
           <Grid
             item
             xs={12}
@@ -51,6 +73,7 @@ const Pricing = () => {
           >
             <Card>
               <CardContent>
+              <Box textAlign="center">
                 <StarIcon
                   fontSize="large"
                   color="info"
@@ -59,41 +82,45 @@ const Pricing = () => {
                   variant="h5"
                   gutterBottom
                 >
-                  Basic Plan
+                  Monthly Plan
                 </Typography>
                 <Typography
                   variant="h6"
                   color="textPrimary"
                 >
-                  $49.99/month
+                  $89.99/month
                 </Typography>
                 <Typography
                   variant="body2"
                   color="textSecondary"
                   paragraph
                 >
-                  Ideal for beginners looking to test AI assistant features.
+                  Unlock Premium Features
                 </Typography>
+                </Box>
                 <Divider />
-                <Box mt={2}>
+                <Box mt={2} textAlign="center">
                   <ul>
-                    <li>5 AI Assistants</li>
-                    <li>Email Support</li>
-                    <li>Basic Features</li>
+                    <li>✔️ Feature A</li>
+                    <li>✔️ Feature B</li>
+                    <li>✔️ Feature C</li>
                   </ul>
                 </Box>
+                <Box textAlign="center">
                 <Button
                   variant="contained"
                   color="info"
                   sx={{ mt: 2 }}
+                  onClick={() => redirectToCheckout('monthly')}
                 >
                   Choose Plan
                 </Button>
+                </Box>
               </CardContent>
             </Card>
           </Grid>
 
-          {/* Pro Plan */}
+          {/* Annual Plan */}
           <Grid
             item
             xs={12}
@@ -101,6 +128,7 @@ const Pricing = () => {
           >
             <Card>
               <CardContent>
+              <Box textAlign="center">
                 <CalendarMonthIcon
                   fontSize="large"
                   color="success"
@@ -109,36 +137,40 @@ const Pricing = () => {
                   variant="h5"
                   gutterBottom
                 >
-                  Pro Plan
+                  Annual Plan
                 </Typography>
                 <Typography
                   variant="h6"
                   color="textPrimary"
                 >
-                  $99.99/month
+                  $999.99/year
                 </Typography>
                 <Typography
                   variant="body2"
                   color="textSecondary"
                   paragraph
                 >
-                  Best for small businesses needing AI support.
+                  Benefit From Our Annual Plan Discount
                 </Typography>
+                </Box>
                 <Divider />
-                <Box mt={2}>
+                <Box mt={2} textAlign= "center">
                   <ul>
-                    <li>Unlimited AI Assistants</li>
-                    <li>Priority Support</li>
-                    <li>Advanced Analytics</li>
+                  <li>✔️ Feature A</li>
+                  <li>✔️ Feature B</li>
+                  <li>✔️ Feature C</li>
                   </ul>
                 </Box>
+                <Box textAlign="center">
                 <Button
                   variant="contained"
                   color="success"
                   sx={{ mt: 2 }}
+                  onClick={() => redirectToCheckout('annual')}
                 >
                   Choose Plan
                 </Button>
+                </Box>
               </CardContent>
             </Card>
           </Grid>
@@ -151,6 +183,7 @@ const Pricing = () => {
           >
             <Card>
               <CardContent>
+              <Box textAlign="center">
                 <AccessTimeIcon
                   fontSize="large"
                   color="warning"
@@ -165,30 +198,34 @@ const Pricing = () => {
                   variant="h6"
                   color="textPrimary"
                 >
-                  Contact Us for Pricing
+                  Contact Us For Pricing
                 </Typography>
                 <Typography
                   variant="body2"
                   color="textSecondary"
                   paragraph
                 >
-                  For large enterprises needing a dedicated AI solution.
+                  Unlock Your Dedicated AI Solution
                 </Typography>
+                </Box>
                 <Divider />
-                <Box mt={2}>
+                <Box mt={2} textAlign="center">
                   <ul>
-                    <li>Custom AI Assistants</li>
-                    <li>24/7 Dedicated Support</li>
-                    <li>Custom Solutions</li>
+                  <li>✔️ Feature A</li>
+                  <li>✔️ Feature B</li>
+                  <li>✔️ Feature C</li>
                   </ul>
                 </Box>
+                <Box textAlign="center">
                 <Button
                   variant="contained"
                   color="warning"
                   sx={{ mt: 2 }}
+                  onClick={() => window.location.href = 'https://criticalfutureglobal.com/'}
                 >
                   Contact Us
                 </Button>
+                </Box>
               </CardContent>
             </Card>
           </Grid>

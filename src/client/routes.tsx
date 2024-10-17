@@ -87,7 +87,7 @@ export const routes: RouteType[] = [
     name: "AI Brain",
     route: "/ai-brain",
     component: <AIBrain />,
-    icon: <Icon fontSize="small">storage</Icon>,
+    icon: <Icon fontSize="medium">psychology</Icon>,
     sidebar: true
   },
   {
@@ -143,7 +143,7 @@ export const routes: RouteType[] = [
     name: "AI Memory",
     route: "/ai-memory",
     component: <AIMemory />,
-    icon: <Icon fontSize="small">memory</Icon>,
+    icon: <Icon fontSize="small">storage</Icon>,
     sidebar: true
   }
 ];
