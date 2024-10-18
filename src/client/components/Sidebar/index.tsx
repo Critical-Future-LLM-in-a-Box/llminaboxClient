@@ -12,6 +12,7 @@ import {
   IconButton,
   Fab
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useAppContext } from "@/client/context";
 import { setSidenavHidden, setSidenavMini } from "@/client/context/actions";
 import { RouteType } from "@/client/routes";
@@ -21,6 +22,7 @@ interface SideNavbarProps {
 }
 
 const Sidebar: React.FC<SideNavbarProps> = ({ routes }) => {
+  const theme = useTheme(); // Access theme
   const [appData, dispatch] = useAppContext();
   const {
     sidenav: { mini: miniSidenav, hidden: hiddenSidenav }
@@ -69,25 +71,33 @@ const Sidebar: React.FC<SideNavbarProps> = ({ routes }) => {
           to={route!}
         >
           <ListItem
-            sx={(theme) => ({
+            sx={{
               "display": "flex",
               "alignItems": "center",
-              "justifyContent": "center",
+              "justifyContent": miniSidenav ? "center" : "start",
               "backgroundColor": isActive
-                ? theme.palette.primary.main
-                : "transparent",
+                ? theme.palette.primary.dark
+                : theme.palette.background.paper,
               "color": isActive
                 ? theme.palette.primary.contrastText
                 : theme.palette.text.secondary,
-              "padding": theme.spacing(1, 2),
-              "margin": theme.spacing(0.5, 2),
               "borderRadius": theme.shape.borderRadius,
               "&:hover": {
-                backgroundColor: theme.palette.action.hover
+                backgroundColor: isActive
+                  ? theme.palette.primary.dark
+                  : theme.palette.primary.dark
               }
-            })}
+            }}
           >
-            <ListItemIcon sx={{ color: isActive ? "white" : "inherit" }}>
+            <ListItemIcon
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: miniSidenav ? theme.spacing(10) : 50,
+                color: isActive ? theme.palette.common.white : "inherit"
+              }}
+            >
               {typeof icon === "string" ? <Icon>{icon}</Icon> : icon}
             </ListItemIcon>
             {!miniSidenav && (
@@ -109,12 +119,12 @@ const Sidebar: React.FC<SideNavbarProps> = ({ routes }) => {
       {!hiddenSidenav && (
         <Drawer
           variant="permanent"
-          sx={(theme) => ({
+          sx={{
             "& .MuiDrawer-paper": {
               overflow: "hidden",
-              marginTop: theme.spacing(12),
-              width: miniSidenav ? theme.spacing(10) : 250,
-              height: "88%",
+              marginTop: "80px",
+              width: miniSidenav ? 80 : 250,
+              height: "calc(100% - 80px)",
               transition: theme.transitions.create(["width"], {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.shorter
@@ -122,9 +132,10 @@ const Sidebar: React.FC<SideNavbarProps> = ({ routes }) => {
               display: "flex",
               justifyContent: "start",
               alignItems: "center",
-              boxShadow: theme.shadows[3]
+              boxShadow: theme.shadows[3],
+              backgroundColor: theme.palette.primary.main // Use lighter primary shade
             }
-          })}
+          }}
         >
           <Box
             display="flex"
@@ -146,7 +157,16 @@ const Sidebar: React.FC<SideNavbarProps> = ({ routes }) => {
 
             <Divider />
 
-            <List>{renderRoutes}</List>
+            <List
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: theme.spacing(1)
+              }}
+            >
+              {renderRoutes}
+            </List>
           </Box>
         </Drawer>
       )}

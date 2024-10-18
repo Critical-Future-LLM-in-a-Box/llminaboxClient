@@ -28,13 +28,6 @@ export interface RouteType {
 
 export const routes: RouteType[] = [
   {
-    name: "Wildcard",
-    route: "*",
-    component: <Dashboard />,
-    icon: <Icon fontSize="small">error</Icon>,
-    sidebar: false
-  },
-  {
     name: "Root",
     route: "/",
     component: <Dashboard />,
@@ -83,15 +76,9 @@ export const routes: RouteType[] = [
     icon: <Icon fontSize="small">exit_to_app</Icon>,
     sidebar: false
   },
+
   {
-    name: "AI Brain",
-    route: "/ai-brain",
-    component: <AIBrain />,
-    icon: <Icon fontSize="medium">psychology</Icon>,
-    sidebar: true
-  },
-  {
-    name: "Create AI Assistant",
+    name: "AI Assistant",
     route: "/create-ai",
     component: <CreateAI />,
     icon: <Icon fontSize="small">build</Icon>,
@@ -105,17 +92,17 @@ export const routes: RouteType[] = [
     sidebar: true
   },
   {
-    name: "AI Voice",
-    route: "/ai-voice",
-    component: <AIVoice />,
-    icon: <Icon fontSize="small">record_voice_over</Icon>,
-    sidebar: true
-  },
-  {
     name: "AI Face",
     route: "/ai-face",
     component: <AIFace />,
     icon: <Icon fontSize="small">face</Icon>,
+    sidebar: true
+  },
+  {
+    name: "AI Voice",
+    route: "/ai-voice",
+    component: <AIVoice />,
+    icon: <Icon fontSize="small">record_voice_over</Icon>,
     sidebar: true
   },
   {
@@ -145,5 +132,19 @@ export const routes: RouteType[] = [
     component: <AIMemory />,
     icon: <Icon fontSize="small">storage</Icon>,
     sidebar: true
+  },
+  {
+    name: "AI Brain",
+    route: "/ai-brain",
+    component: <AIBrain />,
+    icon: <Icon fontSize="medium">psychology</Icon>,
+    sidebar: true
+  },
+  {
+    name: "Wildcard",
+    route: "*",
+    component: <Dashboard />,
+    icon: <Icon fontSize="small">error</Icon>,
+    sidebar: false
   }
 ];

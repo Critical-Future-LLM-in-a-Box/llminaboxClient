@@ -70,8 +70,10 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    navigate("/dashboard", { replace: true });
-  }, []);
+    if (location.pathname !== "/dashboard") {
+      navigate("/dashboard", { replace: true });
+    }
+  });
 
   return (
     <Box p={3}>

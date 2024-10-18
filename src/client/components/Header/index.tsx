@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Icon, Menu, Box, Typography, Button } from "@mui/material";
+import { Icon, Menu, Box, Typography, Button, IconButton } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { RouteType } from "@/client/routes";
+import logo from "@/client/assets/images/llminaboxlogo.png";
 
 interface HeaderProps {
   routes: RouteType[];
@@ -11,6 +13,7 @@ const Header: React.FC<HeaderProps> = ({ routes }) => {
   const [mobileNavbar, setMobileNavbar] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const theme = useTheme();
 
   const handleMobileToggle = (event: React.MouseEvent<HTMLElement>) => {
     setMobileNavbar(mobileNavbar ? null : event.currentTarget);
@@ -38,11 +41,15 @@ const Header: React.FC<HeaderProps> = ({ routes }) => {
             p={1}
             mx={1}
             sx={{
-              "backgroundColor": isActive ? "primary.main" : "transparent",
-              "color": isActive ? "white" : "text.secondary",
+              "backgroundColor": isActive
+                ? theme.palette.primary.main
+                : "transparent",
+              "color": isActive
+                ? theme.palette.primary.contrastText
+                : theme.palette.text.secondary,
               "borderRadius": 1,
               "textDecoration": "none",
-              "&:hover": { backgroundColor: "primary.light" }
+              "&:hover": { backgroundColor: theme.palette.primary.light }
             }}
           >
             <Icon>{typeof icon === "string" ? icon : icon.props.children}</Icon>
@@ -60,14 +67,14 @@ const Header: React.FC<HeaderProps> = ({ routes }) => {
   return (
     <Box
       sx={{
-        p: 2,
+        height: 80,
         width: "100%",
         boxShadow: 3,
         position: "fixed",
         zIndex: 10,
         top: 0,
         left: 0,
-        backgroundColor: "background.paper",
+        backgroundColor: theme.palette.background.paper,
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center"
@@ -79,10 +86,23 @@ const Header: React.FC<HeaderProps> = ({ routes }) => {
         to="/"
         sx={{ display: "flex", alignItems: "center", textDecoration: "none" }}
       >
+        <IconButton>
+          <Box
+            component="img"
+            src={logo as string}
+            alt="Brand Logo"
+            sx={{
+              width: 40,
+              height: 40,
+              objectFit: "contain",
+              mr: 1
+            }}
+          />
+        </IconButton>
         <Typography
           variant="h6"
           fontWeight="bold"
-          color="text.primary"
+          color={theme.palette.text.primary}
         >
           LLMINABOX
         </Typography>
