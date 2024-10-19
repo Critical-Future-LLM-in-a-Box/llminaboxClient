@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: "16"
 
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
       - name: Install dependencies
         run: npm install
 
@@ -32,3 +35,9 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           source: "dist/*"
           target: "htdocs"
+          # run: |
+          #   sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
+          #     echo "Connected to the server using password."
+          #     # Add your SSH commands here, e.g., deploy code
+          #     ls -la
+          #   EOF
