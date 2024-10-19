@@ -20,9 +20,8 @@ jobs:
 
       - name: Deploy via SSH
         run: |
-          sshpass -p llminabox ssh -p 1022 csh3240745@ssh.llminabox.io pwd
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -p 1022 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
-            cd llminaboxClient \
-            git pull \
-            cd .. \
-            cp -rf llminaboxClient/dist/* htdocs
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -p 1022 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
+            cd llminaboxClient
+            git pull
+            cp -rf dist/* ../htdocs
+          "
