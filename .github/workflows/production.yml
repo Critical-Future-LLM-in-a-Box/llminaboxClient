@@ -23,7 +23,4 @@ jobs:
           sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p 1022 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
             cd llminaboxClient
             git pull origin main
-            cd ../
-            touch test.test
-            cp -rf llminaboxClient/dist/* htdocs
           "
