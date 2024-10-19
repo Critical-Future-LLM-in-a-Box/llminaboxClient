@@ -18,24 +18,19 @@ jobs:
         with:
           node-version: "16"
 
-      - name: Install sshpass
-        run: sudo apt-get install -y sshpass
-
       - name: Install dependencies
         run: npm install
 
       - name: Build project
         run: npm run build
 
-      - name: Verify build output
-        run: ls -la dist/
-
-      - name: Copy files via SSH
-        uses: appleboy/scp-action@v0.1.5
+      - name: Copy files via SFTP
+        uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          source: "./dist/*"
-          target: "./htdocs"
+          source: "dist/*"
+          target: "htdocs"
+          sftp: true
           debug: true
