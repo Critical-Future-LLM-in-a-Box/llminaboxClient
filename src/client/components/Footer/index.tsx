@@ -2,7 +2,6 @@ import React from "react";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles";
 
 interface Company {
   href: string;
@@ -25,8 +24,6 @@ const Footer: React.FC<FooterProps> = ({
     name: "Critical Future"
   }
 }) => {
-  const theme = useTheme();
-
   return (
     <Box
       width="100%"
@@ -35,11 +32,6 @@ const Footer: React.FC<FooterProps> = ({
       justifyContent="center"
       alignItems="center"
       p={2}
-      sx={{
-        mt: "auto",
-        backgroundColor: theme.palette.background.default,
-        color: theme.palette.text.primary
-      }}
     >
       <Box
         display="flex"
@@ -47,25 +39,21 @@ const Footer: React.FC<FooterProps> = ({
         alignItems="center"
         flexWrap="wrap"
       >
-        <Typography
-          variant="body2"
-          color="textSecondary"
-        >
+        <Typography variant="body2">
           &copy; {new Date().getFullYear()} Powered by
         </Typography>
         <Link
           href={company.href}
           target="_blank"
           rel="noopener noreferrer"
+          sx={{
+            textDecoration: "none"
+          }}
         >
           <Typography
             variant="button"
             fontWeight="medium"
             ml={0.5}
-            sx={{
-              "color": theme.palette.primary.main,
-              "&:hover": { color: theme.palette.primary.light }
-            }}
           >
             {company.name}
           </Typography>

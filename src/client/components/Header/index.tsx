@@ -1,8 +1,17 @@
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Icon, Menu, Box, Typography, Button, IconButton } from "@mui/material";
+import { Link, useLocation } from "react-router-dom";
+import {
+  Icon,
+  Menu,
+  Box,
+  Typography,
+  IconButton,
+  MenuItem
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { RouteType } from "@/client/routes";
+import { useAppContext } from "@/client/context";
+import { setTheme } from "@/client/context/actions";
 import logo from "@/client/assets/images/llminaboxlogo.png";
 
 interface HeaderProps {
@@ -11,17 +20,36 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ routes }) => {
   const [mobileNavbar, setMobileNavbar] = useState<null | HTMLElement>(null);
-  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const location = useLocation();
   const theme = useTheme();
+  const [appData, dispatch] = useAppContext();
 
   const handleMobileToggle = (event: React.MouseEvent<HTMLElement>) => {
     setMobileNavbar(mobileNavbar ? null : event.currentTarget);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    navigate("/auth/sign-in");
+  const handleThemeToggle = () => {
+    const nextTheme =
+      appData.theme === "light"
+        ? "dark"
+        : appData.theme === "dark"
+          ? "llminabox"
+          : "light";
+    setTheme(dispatch, nextTheme);
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleThemeChange = (themeName: string) => {
+    setTheme(dispatch, themeName);
+    handleMenuClose();
   };
 
   const renderNavbarLinks = () => {
@@ -116,16 +144,58 @@ const Header: React.FC<HeaderProps> = ({ routes }) => {
         {renderNavbarLinks()}
       </Box>
 
+      {/* Theme Toggle and Dropdown for large screens */}
+      <Box
+        display={{ xs: "none", lg: "flex" }}
+        alignItems="center"
+        sx={{ mx: 2 }}
+      >
+        {/* Theme Toggle Icon */}
+        <IconButton
+          onClick={handleThemeToggle}
+          color="primary"
+        >
+          <Icon>
+            {appData.theme === "light"
+              ? "brightness_7"
+              : appData.theme === "dark"
+                ? "brightness_2"
+                : "palette"}
+          </Icon>
+        </IconButton>
+
+        {/* Dropdown for theme selection */}
+        <IconButton onClick={handleMenuOpen}>
+          <Icon>arrow_drop_down</Icon>
+        </IconButton>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+          <MenuItem onClick={() => handleThemeChange("light")}>
+            Light Theme
+          </MenuItem>
+          <MenuItem onClick={() => handleThemeChange("dark")}>
+            Dark Theme
+          </MenuItem>
+          <MenuItem onClick={() => handleThemeChange("llminabox")}>
+            Custom Theme
+          </MenuItem>
+        </Menu>
+      </Box>
+
       {/* Mobile Navbar Toggle (Visible on small screens) */}
       <Box
         display={{ xs: "block", lg: "none" }}
         onClick={handleMobileToggle}
-        sx={{ cursor: "pointer" }}
+        sx={{ cursor: "pointer", mx: 2 }}
       >
         <Icon>{mobileNavbar ? "close" : "menu"}</Icon>
       </Box>
 
-      {/* Mobile Navbar Menu */}
+      {/* Mobile Navbar Menu (includes theme toggler) */}
       <Menu
         anchorEl={mobileNavbar}
         open={Boolean(mobileNavbar)}
@@ -133,15 +203,44 @@ const Header: React.FC<HeaderProps> = ({ routes }) => {
       >
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           {renderNavbarLinks()}
-          <Button
-            variant="text"
-            color="error"
-            onClick={handleLogout}
-            sx={{ mt: 2 }}
-          >
-            <Icon>logout</Icon> Logout
-          </Button>
+
+          {/* Theme Toggle Icon inside mobile menu */}
+          <MenuItem onClick={handleThemeToggle}>
+            <IconButton color="primary">
+              <Icon>
+                {appData.theme === "light"
+                  ? "brightness_7"
+                  : appData.theme === "dark"
+                    ? "brightness_2"
+                    : "palette"}
+              </Icon>
+            </IconButton>
+            <Typography>Toggle Theme</Typography>
+          </MenuItem>
+
+          {/* Dropdown for theme selection inside mobile menu */}
+          <MenuItem onClick={handleMenuOpen}>
+            <Icon>arrow_drop_down</Icon>
+            <Typography>Choose Theme</Typography>
+          </MenuItem>
         </Box>
+      </Menu>
+
+      {/* Dropdown Menu for theme selection in mobile */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={() => handleThemeChange("light")}>
+          Light Theme
+        </MenuItem>
+        <MenuItem onClick={() => handleThemeChange("dark")}>
+          Dark Theme
+        </MenuItem>
+        <MenuItem onClick={() => handleThemeChange("llminabox")}>
+          Custom Theme
+        </MenuItem>
       </Menu>
     </Box>
   );

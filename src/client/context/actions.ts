@@ -22,6 +22,6 @@ export const setNavbarFixed = (
   dispatch({ type: "SET_NAVBAR_FIXED", value });
 };
 
-export const setDarkMode = (dispatch: Dispatch<AppActions>, value: boolean) => {
-  dispatch({ type: "SET_DARK_MODE", value });
+export const setTheme = (dispatch: Dispatch<AppActions>, value: string) => {
+  dispatch({ type: "SET_THEME", value });
 };

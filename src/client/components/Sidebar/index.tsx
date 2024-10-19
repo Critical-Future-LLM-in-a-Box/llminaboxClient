@@ -76,7 +76,7 @@ const Sidebar: React.FC<SideNavbarProps> = ({ routes }) => {
               "alignItems": "center",
               "justifyContent": miniSidenav ? "center" : "start",
               "backgroundColor": isActive
-                ? theme.palette.primary.dark
+                ? theme.palette.primary.main
                 : theme.palette.background.paper,
               "color": isActive
                 ? theme.palette.primary.contrastText
@@ -85,7 +85,7 @@ const Sidebar: React.FC<SideNavbarProps> = ({ routes }) => {
               "&:hover": {
                 backgroundColor: isActive
                   ? theme.palette.primary.dark
-                  : theme.palette.primary.dark
+                  : theme.palette.action.hover
               }
             }}
           >
@@ -122,8 +122,8 @@ const Sidebar: React.FC<SideNavbarProps> = ({ routes }) => {
           sx={{
             "& .MuiDrawer-paper": {
               overflow: "hidden",
-              marginTop: "80px",
-              width: miniSidenav ? 80 : 250,
+              marginTop: theme.spacing(10), // Accounts for the header height
+              width: miniSidenav ? theme.spacing(10) : 250,
               height: "calc(100% - 80px)",
               transition: theme.transitions.create(["width"], {
                 easing: theme.transitions.easing.sharp,
@@ -133,7 +133,7 @@ const Sidebar: React.FC<SideNavbarProps> = ({ routes }) => {
               justifyContent: "start",
               alignItems: "center",
               boxShadow: theme.shadows[3],
-              backgroundColor: theme.palette.primary.main // Use lighter primary shade
+              backgroundColor: theme.palette.background.default
             }
           }}
         >

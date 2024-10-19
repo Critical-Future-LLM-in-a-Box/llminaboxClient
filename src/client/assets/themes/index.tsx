@@ -1,3 +1,1 @@
-import mainTheme from "@/client/assets/themes/main";
-
-export { mainTheme };
+export { llminabox } from "@/client/assets/themes/llminabox";

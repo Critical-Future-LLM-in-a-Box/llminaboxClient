@@ -16,7 +16,7 @@ export const defaultState: AppState = {
   navbar: {
     fixed: true
   },
-  darkMode: false
+  theme: "llminabox"
 };
 
 function reducer(draft: AppState, action: AppActions) {
@@ -32,8 +32,8 @@ function reducer(draft: AppState, action: AppActions) {
     draft.navbar.fixed = action.value;
   }
 
-  if (action.type === "SET_DARK_MODE") {
-    draft.darkMode = action.value;
+  if (action.type === "SET_THEME") {
+    draft.theme = action.value;
   }
 }
 
