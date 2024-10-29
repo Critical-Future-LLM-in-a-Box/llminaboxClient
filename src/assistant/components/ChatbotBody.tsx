@@ -3,23 +3,31 @@ import { useContextData } from "@/assistant/context";
 import ChatbotInput from "@/assistant/components/ChatbotInput";
 import ChatbotSidebar from "@/assistant/components/ChatbotSidebar";
 import MessageCard from "@/assistant/components/ChatbotMessage";
+import { Box, Divider } from "@mui/material";
 
-export default function ChatbotBody() {
+export default function ChatbotBody(): JSX.Element {
   const [chatData] = useContextData();
-
-  const chatBody = React.useRef<HTMLDivElement>(null);
+  const chatBodyRef = React.useRef<HTMLDivElement>(null);
 
   return (
-    <div
-      className="flex"
-      ref={chatBody}
-      style={{
+    <Box
+      ref={chatBodyRef}
+      sx={{
+        display: "flex",
         height: "calc(100% - 160px)"
       }}
     >
       <ChatbotSidebar />
-      <div className="flex flex-col flex-grow">
-        <div className="flex flex-col flex-grow overflow-auto p-4">
+      <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            overflowY: "auto",
+            p: 2
+          }}
+        >
           {chatData.messages.map((message, index) => (
             <MessageCard
               key={index}
@@ -30,11 +38,12 @@ export default function ChatbotBody() {
               }
             />
           ))}
-        </div>
-        <div className="p-4 border-t">
+        </Box>
+        <Divider />
+        <Box sx={{ p: 2 }}>
           <ChatbotInput />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }

@@ -1,36 +1,6 @@
 import React, { useState, useRef, forwardRef } from "react";
-import { Button, CircularProgress } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
+import { Button, Box, CircularProgress } from "@mui/material";
 import { useContextData } from "@/assistant/context";
-
-export function HeaderAvatar(): JSX.Element {
-  const [chatData] = useContextData();
-  const online = chatData.online;
-
-  return (
-    <div
-      className="flex items-center gap-2"
-      title={chatData.config.description}
-    >
-      <Avatar
-        src={chatData.config.avatarStaticUrl}
-        alt="Avatar"
-        sx={{ width: 50, height: 50 }}
-      />
-      <div className="flex flex-col">
-        <p className="text-lg">{chatData.config.name}</p>
-        <div className="flex items-center text-sm">
-          <div
-            className={`w-2.5 h-2.5 rounded-full mr-2 ${
-              online ? "bg-green-500" : "bg-red-500"
-            }`}
-          ></div>
-          <div>{online ? "Online" : "Offline"}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function ChatAvatar(): JSX.Element {
   const [chatData] = useContextData();
@@ -38,23 +8,45 @@ export function ChatAvatar(): JSX.Element {
   const videoSrc = chatData.config.avatarVideoUrl;
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
+  const toggleVideo = () => {
+    if (isVideoOn) {
+      videoRef.current?.pause();
+      setIsVideoOn(false);
+    } else {
+      if (videoRef.current && videoRef.current.readyState > 2) {
+        videoRef.current.play();
+        setIsVideoOn(true);
+      }
+    }
+  };
+
   return (
     <>
-      <div className="rounded-lg overflow-hidden w-[200px] h-[200px]">
-        <img
+      <Box
+        sx={{ width: 200, height: 200, borderRadius: 2, overflow: "hidden" }}
+      >
+        <Box
+          component="img"
           src={chatData.config.avatarLiveUrl}
           alt="Avatar"
-          className={"w-full h-full object-cover"}
-          style={{ display: isVideoOn ? "none" : "block" }}
+          sx={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: isVideoOn ? "none" : "block"
+          }}
         />
-        <video
+        <Box
+          component="video"
           ref={videoRef}
           src={videoSrc}
-          className="w-full h-full object-cover"
-          onEnded={() => {
-            setIsVideoOn(false);
+          sx={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: isVideoOn ? "block" : "none"
           }}
-          style={{ display: isVideoOn ? "block" : "none" }}
+          onEnded={() => setIsVideoOn(false)}
         >
           <track
             kind="captions"
@@ -62,22 +54,12 @@ export function ChatAvatar(): JSX.Element {
             src="/path/to/captions.vtt"
             label="English"
           />
-        </video>
-      </div>
+        </Box>
+      </Box>
       <Button
         variant="outlined"
-        sx={{ width: "100%", color: "gray" }}
-        onClick={() => {
-          if (isVideoOn) {
-            videoRef.current?.pause();
-            setIsVideoOn(false);
-          } else {
-            if (videoRef.current && videoRef.current.readyState > 2) {
-              videoRef.current?.play();
-              setIsVideoOn(true);
-            }
-          }
-        }}
+        sx={{ width: "100%", color: "text.secondary" }}
+        onClick={toggleVideo}
       >
         {isVideoOn ? "Pause" : "About"}
       </Button>
@@ -85,26 +67,34 @@ export function ChatAvatar(): JSX.Element {
   );
 }
 
-export function InteractiveAvatarComponent(
-  {
-    isAvatarLoading
-  }: {
-    isAvatarLoading: boolean;
-  },
-  ref: React.Ref<HTMLVideoElement>
-): JSX.Element {
-  return (
-    <div>
-      {isAvatarLoading && (
-        <div className="flex justify-center items-center">
-          <CircularProgress />
-        </div>
-      )}
+interface InteractiveAvatarProps {
+  isAvatarLoading: boolean;
+}
 
-      <div className="rounded-lg overflow-hidden w-[200px] h-[200px]">
-        <video
+const InteractiveAvatarComponent = (
+  { isAvatarLoading }: InteractiveAvatarProps,
+  ref: React.Ref<HTMLVideoElement>
+): JSX.Element => {
+  return (
+    <Box>
+      {isAvatarLoading && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+      <Box
+        sx={{ width: 200, height: 200, borderRadius: 2, overflow: "hidden" }}
+      >
+        <Box
+          component="video"
           ref={ref}
-          className="w-full h-full object-cover"
+          sx={{ width: "100%", height: "100%", objectFit: "cover" }}
         >
           <track
             kind="captions"
@@ -112,15 +102,13 @@ export function InteractiveAvatarComponent(
             src="/path/to/captions.vtt"
             label="English"
           />
-        </video>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
-}
+};
 
 export const InteractiveAvatar = forwardRef<
   HTMLVideoElement,
-  {
-    isAvatarLoading: boolean;
-  }
+  InteractiveAvatarProps
 >(InteractiveAvatarComponent);

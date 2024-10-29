@@ -1,171 +1,89 @@
-import { default as React, createContext, useContext } from "react";
-import { useImmerReducer } from "use-immer";
+import React, { createContext, useContext, ReactNode } from "react";
+import { useImmerReducer, Reducer } from "use-immer";
+import { Config, ChatData, ChatAction } from "@/assistant/context/types";
 
-export interface Message {
-  role: string;
-  content: string;
-  timestamp: string;
-  uploads?: {
-    data: string;
-    type: string;
-    name: string;
-    mime: string;
-  }[];
-}
-
-export interface Config {
-  apiHost?: string;
-  chatflowid?: string;
-  sessionid?: string;
-  name?: string;
-  description?: string;
-  voiceName?: string;
-  welcomeMessage?: string;
-  avatarStaticUrl?: string;
-  avatarLiveUrl?: string;
-  avatarVideoUrl?: string;
-  themeColor?: string;
-  textColor?: string;
-  chatMemory?: boolean;
-  width?: string;
-  height?: string;
-}
-
-export interface ChatData {
-  messages: Message[];
-  config: Config;
-  online: boolean;
-  error: string;
-  isApiTyping: boolean;
-  isApiAcceptingVoice: boolean;
-  isApiAcceptingImage: boolean;
-  isApiAcceptingFiles: boolean;
-}
-
-export const createDefaultContextData = (
-  initConfig: Config = {},
-  welcomeMessage: Message = {
-    role: "apiMessage",
-    content: "Hi there! How can I assist you today?",
-    timestamp: new Date().toLocaleString()
-  }
-): ChatData => {
-  return {
-    messages: [welcomeMessage],
-    online: false,
-    isApiTyping: false,
-    isApiAcceptingVoice: false,
-    isApiAcceptingImage: false,
-    isApiAcceptingFiles: false,
-    error: "",
-    config: {
-      apiHost: "",
-      chatflowid: "",
-      name: "",
-      description: "",
-      voiceName: "",
-      avatarStaticUrl: "",
-      avatarLiveUrl: "",
-      avatarVideoUrl: "",
-      chatMemory: false,
-      themeColor: "",
-      textColor: "",
-      width: "",
-      height: "",
-      ...initConfig,
-      sessionid: localStorage.getItem("sessionid")
-        ? (localStorage.getItem("sessionid") as string)
-        : initConfig.sessionid
+const createContextData = (config: Config = {}): ChatData => ({
+  config,
+  chats: config.session?.chats || [],
+  chatid: config.session?.chatId || Math.random().toString().substring(2, 12),
+  messages: [
+    {
+      role: "api",
+      content:
+        config.assistant?.welcomeMessage ||
+        "Hello! How can I assist you today?",
+      timestamp: new Date().toLocaleString(),
+      uploads: []
     }
-  };
-};
+  ],
+  online: false,
+  error: "",
+  isApiTyping: false,
+  isUserTyping: false
+});
 
-export const Context = createContext<
-  [
-    ChatData,
-    React.Dispatch<{
-      type: string;
-      payload: string | boolean | Message | Config;
-    }>
-  ]
->([createDefaultContextData(), () => {}]);
+// Context and Provider
+const ChatContext = createContext<
+  [ChatData, React.Dispatch<ChatAction>] | null
+>(null);
 
-export const useContextData = () => {
-  return useContext(Context);
-};
-
-export function ContextProvider({
+const ContextProvider = ({
   children,
-  initConfig
+  config
 }: {
-  children: React.ReactNode;
-  initConfig: Config;
-}): JSX.Element {
+  children: ReactNode;
+  config: Config;
+}): JSX.Element => {
   const [chatData, dispatch] = useImmerReducer(
     chatReducer,
-    createDefaultContextData(initConfig)
+    createContextData(config)
   );
 
   return (
-    <Context.Provider value={[chatData, dispatch]}>{children}</Context.Provider>
+    <ChatContext.Provider value={[chatData, dispatch]}>
+      {children}
+    </ChatContext.Provider>
   );
-}
+};
 
+// Hook for using context data
+const useContextData = () => {
+  const context = useContext(ChatContext);
+  if (!context) {
+    throw new Error("useContextData must be used within a ContextProvider");
+  }
+  return context;
+};
 
-export const chatReducer = (
-  draft: ChatData,
-  action: { type: string; payload: string | boolean | Message | Config }
-) => {
+// Reducer
+const chatReducer: Reducer<ChatData, ChatAction> = (draft, action) => {
   switch (action.type) {
     case "SET_CONFIG":
-      draft.config = action.payload as Config;
-      break;
-    case "SET_ERROR":
-      draft.error = action.payload as string;
-      break;
-    case "SET_SESSION_ID":
-      draft.config.sessionid = action.payload as string;
-      break;
-    case "SET_CHAT_MEMORY":
-      draft.config.chatMemory = !!action.payload as boolean;
-      break;
-    case "SET_ONLINE_STATUS":
-      draft.online = !!action.payload as boolean;
-      break;
-    case "SET_API_TYPING":
-      draft.isApiTyping = !!action.payload as boolean;
-      break;
-    case "SET_API_ACCEPTING_VOICE":
-      draft.isApiAcceptingVoice = !!action.payload as boolean;
-      break;
-    case "SET_API_ACCEPTING_IMAGE":
-      draft.isApiAcceptingImage = !!action.payload as boolean;
-      break;
-    case "SET_API_ACCEPTING_FILES":
-      draft.isApiAcceptingFiles = !!action.payload as boolean;
-      break;
-    case "CLEAR_CHAT":
-      draft.messages = [...createDefaultContextData().messages];
-      const newSessionID = Math.random().toString(10).substring(2, 12);
-      draft.config.sessionid = newSessionID;
-      localStorage.setItem("sessionid", newSessionID);
+      draft.config = action.payload;
       break;
     case "ADD_MESSAGE":
-      draft.messages.push(action.payload as Message);
+      draft.messages.push(action.payload);
       break;
-    case "DELETE_MESSAGE":
-      draft.messages.pop();
+    case "SET_ONLINE_STATUS":
+      draft.online = action.payload;
       break;
-    case "UPDATE_MESSAGE":
-      const newMessage = action.payload as Message;
-      const oldMessage = draft.messages.pop();
-      if (oldMessage) {
-        draft.messages.push({
-          ...oldMessage,
-          ...newMessage
-        });
-      }
+    case "SET_ERROR":
+      draft.error = action.payload;
+      break;
+    case "SET_API_TYPING":
+      draft.isApiTyping = action.payload;
+      break;
+    case "SET_USER_TYPING":
+      draft.isUserTyping = action.payload;
+      break;
+    case "CLEAR_CHAT":
+      draft.messages = [];
+      draft.chatid = Math.random().toString().substring(2, 12);
+      localStorage.setItem("chatid", draft.chatid);
+      break;
     default:
       break;
   }
 };
+
+export { ContextProvider, useContextData, createContextData };

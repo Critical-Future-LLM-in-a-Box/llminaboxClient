@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextareaAutosize, IconButton } from "@mui/material";
+import { Button, TextareaAutosize, IconButton, Box } from "@mui/material";
 import { Mic, Stop, Delete, Image, UploadFile } from "@mui/icons-material";
 import { sendMessage } from "@/assistant/utils/getMessage";
 import { useContextData, Message } from "@/assistant/context";
@@ -17,11 +17,8 @@ export default function ChatbotInput() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     sendMessage(userMessage, chatData, dispatch, userUploads);
-
     setUserMessage("");
-
     resetUploadState();
   };
 
@@ -87,17 +84,25 @@ export default function ChatbotInput() {
   };
 
   return (
-    <form
-      className="flex flex-wrap items-center justify-evenly gap-2 w-full"
+    <Box
+      component="form"
       onSubmit={handleSubmit}
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 2,
+        width: "100%"
+      }}
     >
-      <div className="flex items-center justify-center w-full">
+      <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
         {userUploads?.length ? (
-          <div className="flex items-center justify-center m-2">
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, m: 2 }}>
             {userUploads.map((upload, index) => (
-              <div
+              <Box
                 key={index}
-                className="flex items-center justify-center gap-2"
+                sx={{ display: "flex", alignItems: "center", gap: 1 }}
               >
                 {upload.type === "audio" && (
                   <audio
@@ -108,36 +113,49 @@ export default function ChatbotInput() {
                   </audio>
                 )}
                 {upload.type === "file" && upload.mime.includes("image") && (
-                  <img
-                    className="h-20 w-20 object-cover"
+                  <Box
+                    component="img"
                     src={upload.data}
                     alt={upload.name}
+                    sx={{
+                      height: 80,
+                      width: 80,
+                      objectFit: "cover",
+                      borderRadius: 1
+                    }}
                   />
                 )}
-                {upload.type === "file" && (
-                  <div className="p-2 border border-gray-300 rounded">
+                {upload.type === "file" && !upload.mime.includes("image") && (
+                  <Box
+                    sx={{
+                      p: 1,
+                      border: "1px solid",
+                      borderColor: "grey.300",
+                      borderRadius: 1
+                    }}
+                  >
                     {upload.name}
-                  </div>
+                  </Box>
                 )}
                 <IconButton
-                  onClick={() => {
-                    setUserUploads(userUploads?.filter((_, i) => i !== index));
-                  }}
+                  onClick={() =>
+                    setUserUploads(userUploads.filter((_, i) => i !== index))
+                  }
+                  sx={{ color: "error.main" }}
                 >
-                  <Delete color="error" />
+                  <Delete />
                 </IconButton>
-              </div>
+              </Box>
             ))}
-          </div>
+          </Box>
         ) : null}
-      </div>
+      </Box>
 
-      <div className="flex flex-1 justify-center items-center">
+      <Box sx={{ display: "flex", flex: 1, justifyContent: "center" }}>
         <TextareaAutosize
           value={userMessage}
           disabled={!chatData.online || chatData.isApiTyping || isRecording}
           placeholder="Type your message..."
-          className="resize-none flex justify-center items-center w-full min-w-[200px] p-2"
           onChange={handleMessageChange}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -145,10 +163,19 @@ export default function ChatbotInput() {
               handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
             }
           }}
+          style={{
+            width: "100%",
+            minWidth: "200px",
+            padding: "8px",
+            resize: "none",
+            fontSize: "1rem",
+            borderRadius: "4px",
+            border: "1px solid #ccc"
+          }}
         />
-      </div>
+      </Box>
 
-      <div className="flex flex-nowrap justify-center items-center gap-2 p-2">
+      <Box sx={{ display: "flex", gap: 2, p: 2 }}>
         <IconButton
           onClick={isRecording ? handleStopRecording : handleStartRecording}
           disabled={
@@ -175,7 +202,6 @@ export default function ChatbotInput() {
             onChange={handleImageUpload}
           />
         </IconButton>
-
         <IconButton
           component="label"
           disabled={
@@ -193,7 +219,6 @@ export default function ChatbotInput() {
             onChange={handleFileUpload}
           />
         </IconButton>
-
         <Button
           type="submit"
           variant="outlined"
@@ -205,7 +230,7 @@ export default function ChatbotInput() {
         >
           Send
         </Button>
-      </div>
-    </form>
+      </Box>
+    </Box>
   );
 }

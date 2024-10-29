@@ -1,38 +1,31 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import { useLocation, Route } from "react-router-dom";
+import {
+  ThemeProvider,
+  CssBaseline,
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 import { routes, RouteType } from "@/client/routes";
-import Sidebar from "@/client/components/Sidebar";
-import { llminabox } from "@/client/assets/themes";
+import {
+  SideNavigation,
+  BottomNavigation
+} from "@/client/components/Navigation";
+import { lightTheme, darkTheme } from "@/client/assets/themes";
 import Header from "@/client/components/Header";
-import Layout from "@/client/components/Layout";
-import ChatbotBubble from "@/assistant/components/ChatbotBubble";
+import MainContent from "@/client/components/Main";
+import Footer from "@/client/components/Footer";
 import "material-icons/iconfont/material-icons.css";
 import "@fontsource/roboto";
 import "@/client/index.css";
-import { assistantConfig } from "@/client/config";
-import { useAppContext } from "./context";
+import { useAppContext } from "@/client/context";
 
 export default function App() {
   const [appData] = useAppContext();
   const { pathname } = useLocation();
-
-  const lightTheme = createTheme({ palette: { mode: "light" } });
-  const darkTheme = createTheme({ palette: { mode: "dark" } });
-  const llminaboxTheme = createTheme({
-    palette: {
-      mode: "dark",
-      ...llminabox.palette
-    }
-  });
-
-  const theme =
-    appData.theme === "light"
-      ? lightTheme
-      : appData.theme === "dark"
-        ? darkTheme
-        : llminaboxTheme;
+  const theme = appData.theme === "dark" ? darkTheme : lightTheme;
+  const muiTheme = useTheme();
+  const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down("md"));
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -51,12 +44,28 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+
+      {/* Header */}
       <Header routes={routes} />
-      <Sidebar routes={routes} />
-      <Layout>
-        <Routes>{getRoutes(routes)}</Routes>
-      </Layout>
-      <ChatbotBubble initConfig={assistantConfig} />
+
+      <div style={{ display: "flex", flexGrow: 1 }}>
+        {/* Side Navigation */}
+        <SideNavigation routes={routes} />
+
+        {/* Main Content */}
+        <div style={{ flexGrow: 1 }}>
+          <MainContent
+            routes={routes}
+            getRoutes={getRoutes}
+          />
+        </div>
+      </div>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Bottom Navigation (Visible only on small screens) */}
+      {isSmallScreen && <BottomNavigation routes={routes} />}
     </ThemeProvider>
   );
 }

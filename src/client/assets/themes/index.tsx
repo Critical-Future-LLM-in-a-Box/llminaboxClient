@@ -1,1 +1,2 @@
-export { llminabox } from "@/client/assets/themes/llminabox";
+export { lightTheme } from "@/client/assets/themes/light";
+export { darkTheme } from "@/client/assets/themes/dark";

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Color from "color";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
-import CircularProgress from "@mui/material/CircularProgress";
+import { CircularProgress, Box, IconButton, Typography } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import StopIcon from "@mui/icons-material/Stop";
 import { useContextData, Message } from "@/assistant/context";
@@ -52,15 +52,21 @@ export default function MessageCard({
   };
 
   return (
-    <div
-      className={`flex flex-col justify-center m-2 w-fit ${
-        message.role === "apiMessage" ? "self-start" : "self-end"
-      }`}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: message.role === "apiMessage" ? "flex-start" : "flex-end",
+        m: 1,
+        width: "fit-content"
+      }}
     >
-      <div
-        className="inline-block p-2 rounded-lg"
-        style={{
-          backgroundColor:
+      <Box
+        sx={{
+          display: "inline-block",
+          p: 2,
+          borderRadius: 1,
+          bgcolor:
             message.role === "apiMessage"
               ? Color(chatData.config.themeColor).darken(0.02).toString()
               : Color(chatData.config.themeColor).darken(0.01).toString()
@@ -72,44 +78,70 @@ export default function MessageCard({
           <>
             <MessageMarked content={message.content} />
             {message.uploads && message.uploads.length > 0 && (
-              <div className="mt-2">
+              <Box sx={{ mt: 1 }}>
                 {message.uploads.map((upload, index) => (
-                  <div
+                  <Box
                     key={index}
-                    className="mb-2"
+                    sx={{ mb: 1 }}
                   >
                     {upload.type === "file" &&
                     upload.mime.startsWith("image") ? (
-                      <img
+                      <Box
+                        component="img"
                         src={upload.data}
                         alt={upload.name}
-                        className="w-20 h-20 object-cover rounded"
+                        sx={{
+                          width: 80,
+                          height: 80,
+                          objectFit: "cover",
+                          borderRadius: 1
+                        }}
                       />
                     ) : upload.type === "audio" ? (
-                      <audio
+                      <Box
+                        component="audio"
                         controls
                         src={upload.data}
-                        className="w-full"
+                        sx={{ width: "100%" }}
                       >
                         <track kind="captions" />
-                      </audio>
+                      </Box>
                     ) : (
-                      <div className="p-2 border border-gray-300 rounded">
+                      <Box
+                        sx={{
+                          p: 1,
+                          border: "1px solid",
+                          borderColor: "grey.300",
+                          borderRadius: 1,
+                          typography: "body2"
+                        }}
+                      >
                         {upload.name}
-                      </div>
+                      </Box>
                     )}
-                  </div>
+                  </Box>
                 ))}
-              </div>
+              </Box>
             )}
           </>
         )}
-      </div>
+      </Box>
 
-      <div className="flex gap-2 items-center text-xs text-gray-500 mt-1">
-        {message.timestamp}{" "}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          color: "text.secondary",
+          mt: 1
+        }}
+      >
+        <Typography variant="caption">{message.timestamp}</Typography>
         {message.role === "apiMessage" && (
-          <button onClick={handleVoiceClick}>
+          <IconButton
+            onClick={handleVoiceClick}
+            size="small"
+          >
             {isFetchingVoice ? (
               <CircularProgress size={16} />
             ) : isPlaying ? (
@@ -117,15 +149,20 @@ export default function MessageCard({
             ) : (
               <VolumeUpIcon fontSize="small" />
             )}
-          </button>
+          </IconButton>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 
 export function MessageMarked({ content }: { content: string }): JSX.Element {
   const rawHtml = marked(content);
   const sanitizedHtml = DOMPurify.sanitize(rawHtml as string);
-  return <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
+  return (
+    <Box
+      sx={{ typography: "body2" }}
+      dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+    />
+  );
 }

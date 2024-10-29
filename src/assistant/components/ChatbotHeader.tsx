@@ -1,6 +1,13 @@
 import React, { useState, useEffect, ReactNode } from "react";
 import color from "color";
-import { Button, ButtonGroup, Modal, Box, Typography } from "@mui/material";
+import {
+  Button,
+  ButtonGroup,
+  Modal,
+  Box,
+  Typography,
+  CircularProgress
+} from "@mui/material";
 import { HeaderAvatar } from "@/assistant/components/Avatar";
 import { useContextData } from "@/assistant/context";
 
@@ -52,17 +59,26 @@ export default function ChatbotHeader(): JSX.Element {
 
   return (
     <>
-      <div
-        className="flex flex-row items-center justify-between border shadow-sm p-4 h-[80px]"
-        style={{
-          backgroundColor: color(chatData.config.themeColor)
-            .darken(0.03)
-            .string(),
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          boxShadow: 1,
+          p: 2,
+          height: 80,
+          bgcolor: color(chatData.config.themeColor).darken(0.03).string(),
           color: color(chatData.config.textColor).darken(0.05).string()
         }}
       >
         <HeaderAvatar />
-      </div>
+        <ButtonGroup variant="outlined">
+          <Button onClick={() => setHistoryModalOpen(true)}>
+            View History
+          </Button>
+        </ButtonGroup>
+      </Box>
 
       <Modal
         open={isHistoryModalOpen}
@@ -78,36 +94,63 @@ export default function ChatbotHeader(): JSX.Element {
             border: "2px solid #000",
             boxShadow: 24,
             p: 4,
-            width: "600px",
-            height: "400px",
-            overflowY: "auto",
-            overflowX: "hidden"
+            width: 600,
+            height: 400,
+            overflowY: "auto"
           }}
         >
           <Typography
             variant="h6"
             component="h2"
+            gutterBottom
           >
             Chat History
           </Typography>
-          <div>
+          <Box>
             {loading ? (
-              <div>Loading...</div>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <CircularProgress />
+              </Box>
             ) : error ? (
-              <div>{error}</div>
+              <Typography color="error">{error}</Typography>
             ) : chatHistory.length ? (
               chatHistory.map((message) => (
-                <div key={message.id}>
-                  <strong>{message.role}:</strong> {message.content} <br />
-                  <small>
+                <Box
+                  key={message.id}
+                  sx={{ mb: 2 }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    component="strong"
+                  >
+                    {message.role}:
+                  </Typography>{" "}
+                  <Typography
+                    variant="body2"
+                    component="span"
+                  >
+                    {message.content}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    display="block"
+                  >
                     {new Date(message.createdDate).toLocaleString()}
-                  </small>
-                </div>
+                  </Typography>
+                </Box>
               ))
             ) : (
-              <div>No chat history available.</div>
+              <Typography variant="body2">
+                No chat history available.
+              </Typography>
             )}
-          </div>
+          </Box>
         </Box>
       </Modal>
     </>
