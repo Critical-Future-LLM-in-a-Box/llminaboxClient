@@ -1,5 +1,22 @@
 import React from "react";
-import Icon from "@mui/material/Icon";
+
+import HomeIcon from "@mui/icons-material/Home";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonIcon from "@mui/icons-material/Person";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import LoginIcon from "@mui/icons-material/Login";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import BuildIcon from "@mui/icons-material/Build";
+import ExtensionIcon from "@mui/icons-material/Extension";
+import FaceIcon from "@mui/icons-material/Face";
+import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
+import ViewCompactIcon from "@mui/icons-material/ViewCompact";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import CodeIcon from "@mui/icons-material/Code";
+import StorageIcon from "@mui/icons-material/Storage";
+import PsychologyIcon from "@mui/icons-material/Psychology";
+import ErrorIcon from "@mui/icons-material/Error";
 
 import Dashboard from "@/client/layouts/client-dashboard";
 import Pricing from "@/client/layouts/client-pricing";
@@ -31,120 +48,119 @@ export const routes: RouteType[] = [
     name: "Root",
     route: "/",
     component: <Dashboard />,
-    icon: <Icon fontSize="small">home</Icon>,
+    icon: <HomeIcon fontSize="small" />,
     sidebar: false
   },
   {
     name: "Dashboard",
     route: "/dashboard",
     component: <Dashboard />,
-    icon: <Icon fontSize="small">dashboard</Icon>,
+    icon: <DashboardIcon fontSize="small" />,
     sidebar: false
   },
   {
     name: "Profile",
     route: "/profile",
     component: <Profile />,
-    icon: <Icon fontSize="small">person</Icon>,
+    icon: <PersonIcon fontSize="small" />,
     sidebar: false
   },
   {
     name: "Pricing",
     route: "/pricing",
     component: <Pricing />,
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <ReceiptLongIcon fontSize="small" />,
     sidebar: false
   },
   {
     name: "Sign Up",
     route: "/auth/sign-up",
     component: <SignUp />,
-    icon: <Icon fontSize="small">assignment</Icon>,
+    icon: <AssignmentIcon fontSize="small" />,
     sidebar: false
   },
   {
     name: "Sign In",
     route: "/auth/sign-in",
     component: <SignIn />,
-    icon: <Icon fontSize="small">login</Icon>,
+    icon: <LoginIcon fontSize="small" />,
     sidebar: false
   },
   {
     name: "Logout",
     route: "/auth/logout",
     component: <Logout />,
-    icon: <Icon fontSize="small">exit_to_app</Icon>,
+    icon: <ExitToAppIcon fontSize="small" />,
     sidebar: false
   },
-
   {
     name: "AI Assistant",
-    route: "/create-ai",
+    route: "/ai-create",
     component: <CreateAI />,
-    icon: <Icon fontSize="small">build</Icon>,
+    icon: <BuildIcon fontSize="small" />,
     sidebar: true
   },
   {
     name: "AI Capabilities",
     route: "/ai-capabilities",
     component: <AICapabilities />,
-    icon: <Icon fontSize="small">extension</Icon>,
+    icon: <ExtensionIcon fontSize="small" />,
     sidebar: true
   },
   {
     name: "AI Face",
     route: "/ai-face",
     component: <AIFace />,
-    icon: <Icon fontSize="small">face</Icon>,
+    icon: <FaceIcon fontSize="small" />,
     sidebar: true
   },
   {
     name: "AI Voice",
     route: "/ai-voice",
     component: <AIVoice />,
-    icon: <Icon fontSize="small">record_voice_over</Icon>,
+    icon: <RecordVoiceOverIcon fontSize="small" />,
     sidebar: true
   },
   {
     name: "AI Layout",
     route: "/ai-layout",
     component: <AILayout />,
-    icon: <Icon fontSize="small">view_compact</Icon>,
+    icon: <ViewCompactIcon fontSize="small" />,
     sidebar: true
   },
   {
     name: "AI Demos",
     route: "/ai-demos",
     component: <AIDemos />,
-    icon: <Icon fontSize="small">play_circle_outline</Icon>,
+    icon: <PlayCircleOutlineIcon fontSize="small" />,
     sidebar: true
   },
   {
     name: "AI Code Snippets",
     route: "/ai-code-snippets",
     component: <AICodeSnippets />,
-    icon: <Icon fontSize="small">code</Icon>,
+    icon: <CodeIcon fontSize="small" />,
     sidebar: true
   },
   {
     name: "AI Memory",
     route: "/ai-memory",
     component: <AIMemory />,
-    icon: <Icon fontSize="small">storage</Icon>,
+    icon: <StorageIcon fontSize="small" />,
     sidebar: true
   },
   {
     name: "AI Brain",
     route: "/ai-brain",
     component: <AIBrain />,
-    icon: <Icon fontSize="medium">psychology</Icon>,
+    icon: <PsychologyIcon fontSize="medium" />,
     sidebar: true
   },
   {
     name: "Wildcard",
     route: "*",
     component: <Dashboard />,
-    icon: <Icon fontSize="small">error</Icon>,
+    icon: <ErrorIcon fontSize="small" />,
     sidebar: false
   }
 ];

@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  ReactNode,
-  Dispatch,
-  useMemo
-} from "react";
+import React, { createContext, useContext, ReactNode } from "react";
 import { useImmerReducer } from "use-immer";
 
 export interface AppState {
@@ -12,7 +6,6 @@ export interface AppState {
     mini: boolean;
     hidden: boolean;
   };
-
   theme: "light" | "dark";
 }
 
@@ -29,23 +22,33 @@ export const defaultState: AppState = {
   theme: "dark"
 };
 
-function reducer(draft: AppState, action: AppActions) {
-  if (action.type === "SET_SIDENAV_MINI") {
-    draft.sidenav.mini = action.value;
-  }
-
-  if (action.type === "SET_SIDENAV_HIDDEN") {
-    draft.sidenav.hidden = action.value;
-  }
-
-  if (action.type === "SET_THEME") {
-    draft.theme = action.value;
+export function reducer(draft: AppState, action: AppActions) {
+  switch (action.type) {
+    case "SET_SIDENAV_MINI":
+      draft.sidenav.mini = action.value;
+      break;
+    case "SET_SIDENAV_HIDDEN":
+      draft.sidenav.hidden = action.value;
+      break;
+    case "SET_THEME":
+      draft.theme = action.value;
+      break;
   }
 }
 
-export const AppContext = createContext<[AppState, Dispatch<AppActions>]>([
+interface AppContextActions {
+  setSidenavMini: (value: boolean) => void;
+  setSidenavHidden: (value: boolean) => void;
+  setTheme: (value: AppState["theme"]) => void;
+}
+
+export const AppContext = createContext<[AppState, AppContextActions]>([
   defaultState,
-  () => {}
+  {
+    setSidenavMini: () => {},
+    setSidenavHidden: () => {},
+    setTheme: () => {}
+  }
 ]);
 
 export function useAppContext() {
@@ -53,34 +56,22 @@ export function useAppContext() {
 }
 
 export function AppContextProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useImmerReducer(reducer, defaultState);
-  const providedValue: [AppState, Dispatch<AppActions>] = useMemo(
-    () => [state, dispatch],
-    [state, dispatch]
-  );
+  const [appData, dispatch] = useImmerReducer(reducer, defaultState);
+
+  const actions: AppContextActions = {
+    setSidenavMini: (value: boolean) =>
+      dispatch({ type: "SET_SIDENAV_MINI", value }),
+
+    setSidenavHidden: (value: boolean) =>
+      dispatch({ type: "SET_SIDENAV_HIDDEN", value }),
+
+    setTheme: (value: AppState["theme"]) =>
+      dispatch({ type: "SET_THEME", value })
+  };
 
   return (
-    <AppContext.Provider value={providedValue}>{children}</AppContext.Provider>
+    <AppContext.Provider value={[appData, actions]}>
+      {children}
+    </AppContext.Provider>
   );
 }
-
-export const setSidenavMini = (
-  dispatch: Dispatch<AppActions>,
-  value: boolean
-) => {
-  dispatch({ type: "SET_SIDENAV_MINI", value });
-};
-
-export const setSidenavHidden = (
-  dispatch: Dispatch<AppActions>,
-  value: boolean
-) => {
-  dispatch({ type: "SET_SIDENAV_HIDDEN", value });
-};
-
-export const setTheme = (
-  dispatch: Dispatch<AppActions>,
-  value: AppState["theme"]
-) => {
-  dispatch({ type: "SET_THEME", value });
-};

@@ -1,71 +1,91 @@
 import React, { useEffect } from "react";
 import { useLocation, Route } from "react-router-dom";
-import {
-  ThemeProvider,
-  CssBaseline,
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { ThemeProvider, CssBaseline, Box } from "@mui/material";
+
+import { useAppContext } from "@/client/context";
 import { routes, RouteType } from "@/client/routes";
-import {
-  SideNavigation,
-  BottomNavigation
-} from "@/client/components/Navigation";
 import { lightTheme, darkTheme } from "@/client/assets/themes";
 import Header from "@/client/components/Header";
 import MainContent from "@/client/components/Main";
 import Footer from "@/client/components/Footer";
-import "material-icons/iconfont/material-icons.css";
+import {
+  SideNavigation,
+  BottomNavigation
+} from "@/client/components/Navigation";
+
 import "@fontsource/roboto";
-import "@/client/index.css";
-import { useAppContext } from "@/client/context";
 
 export default function App() {
   const [appData] = useAppContext();
   const { pathname } = useLocation();
+
   const theme = appData.theme === "dark" ? darkTheme : lightTheme;
-  const muiTheme = useTheme();
-  const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down("md"));
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  const getRoutes = (allRoutes: RouteType[]): JSX.Element[] => {
-    return allRoutes.map((route) => (
+  const getRoutes = (allRoutes: RouteType[]): JSX.Element[] =>
+    allRoutes.map((route) => (
       <Route
         key={route.name}
         path={route.route}
         element={route.component}
       />
     ));
-  };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <Box
+        sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      >
+        {/* Header */}
+        <Box>
+          <Header routes={routes} />
+        </Box>
 
-      {/* Header */}
-      <Header routes={routes} />
+        {/* Main content area with Sidebar and MainContent */}
+        <Box sx={{ display: "flex", flexGrow: 1 }}>
+          {/* Sidebar */}
+          <Box
+            sx={{
+              display: { xs: "none", md: "block" },
+              width: appData.sidenav.mini ? "80px" : "250px",
+              overflowY: "auto",
+              flexShrink: 0
+            }}
+          >
+            <SideNavigation routes={routes} />
+          </Box>
 
-      <div style={{ display: "flex", flexGrow: 1 }}>
-        {/* Side Navigation */}
-        <SideNavigation routes={routes} />
+          {/* Main Content */}
+          <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+            <Box sx={{ flexGrow: 1, overflowY: "auto", padding: 2 }}>
+              <MainContent
+                routes={routes}
+                getRoutes={getRoutes}
+              />
+            </Box>
+            <Box>
+              <Footer />
+            </Box>
+          </Box>
+        </Box>
 
-        {/* Main Content */}
-        <div style={{ flexGrow: 1 }}>
-          <MainContent
-            routes={routes}
-            getRoutes={getRoutes}
-          />
-        </div>
-      </div>
-
-      {/* Footer */}
-      <Footer />
-
-      {/* Bottom Navigation (Visible only on small screens) */}
-      {isSmallScreen && <BottomNavigation routes={routes} />}
+        {/* Bottom Navigation (Visible only on small screens) */}
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            width: "100%",
+            zIndex: 999,
+            display: { xs: "block", md: "none" }
+          }}
+        >
+          <BottomNavigation routes={routes} />
+        </Box>
+      </Box>
     </ThemeProvider>
   );
 }

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Button,
-  Icon,
   Menu,
   Typography,
   IconButton,
@@ -14,9 +13,12 @@ import {
   useMediaQuery,
   useTheme
 } from "@mui/material";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import Brightness2Icon from "@mui/icons-material/Brightness2";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import { RouteType } from "@/client/routes";
 import { useAppContext } from "@/client/context";
-import { setTheme } from "@/client/context";
 import logo from "@/client/assets/images/llminaboxlogo.png";
 
 interface HeaderProps {
@@ -25,7 +27,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ routes }) => {
   const [mobileNavbar, setMobileNavbar] = useState<null | HTMLElement>(null);
-  const [appData, dispatch] = useAppContext();
+  const [appData, { setTheme }] = useAppContext();
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
@@ -36,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({ routes }) => {
 
   const handleThemeToggle = () => {
     const nextTheme = appData.theme === "light" ? "dark" : "light";
-    setTheme(dispatch, nextTheme);
+    setTheme(nextTheme);
   };
 
   const renderNavbarLinks = () => {
@@ -55,8 +57,13 @@ const Header: React.FC<HeaderProps> = ({ routes }) => {
             onClick={() => setMobileNavbar(null)}
             sx={{ justifyContent: "flex-start" }}
           >
-            <Icon sx={{ marginRight: theme.spacing(1) }}>{icon}</Icon>
-            <Typography variant="body1">{name}</Typography>
+            {icon}
+            <Typography
+              variant="body1"
+              sx={{ ml: 1 }}
+            >
+              {name}
+            </Typography>
           </MenuItem>
         ) : (
           <Button
@@ -65,7 +72,7 @@ const Header: React.FC<HeaderProps> = ({ routes }) => {
             to={route}
             variant={isActive ? "contained" : "text"}
             color={isActive ? "primary" : "inherit"}
-            startIcon={<Icon>{icon}</Icon>}
+            startIcon={icon}
             sx={{ padding: 1, margin: 1 }}
           >
             <Typography
@@ -124,9 +131,11 @@ const Header: React.FC<HeaderProps> = ({ routes }) => {
               onClick={handleThemeToggle}
               sx={{ borderRadius: 1 }}
             >
-              <Icon>
-                {appData.theme === "light" ? "brightness_7" : "brightness_2"}
-              </Icon>
+              {appData.theme === "light" ? (
+                <Brightness7Icon />
+              ) : (
+                <Brightness2Icon />
+              )}
             </IconButton>
 
             {/* Mobile Navbar Toggle */}
@@ -134,7 +143,7 @@ const Header: React.FC<HeaderProps> = ({ routes }) => {
               onClick={handleMobileToggle}
               sx={{ display: { xs: "block", lg: "none" }, borderRadius: 1 }}
             >
-              <Icon>{mobileNavbar ? "close" : "menu"}</Icon>
+              {mobileNavbar ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
           </Box>
         </Toolbar>

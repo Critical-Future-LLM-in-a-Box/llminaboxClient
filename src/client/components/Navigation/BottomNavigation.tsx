@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   BottomNavigation as BottomNavigationBar,
   BottomNavigationAction,
-  Icon,
   Paper
 } from "@mui/material";
 import { NavLink, useLocation } from "react-router-dom";
@@ -12,7 +11,9 @@ interface BottomNavigationProps {
   routes: RouteType[];
 }
 
-const BottomNavigation: React.FC<BottomNavigationProps> = ({ routes }) => {
+export const BottomNavigation: React.FC<BottomNavigationProps> = ({
+  routes
+}) => {
   const location = useLocation();
   const [value, setValue] = useState(location.pathname);
 
@@ -49,7 +50,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ routes }) => {
               key={index}
               label={name}
               value={route}
-              icon={<Icon>{icon}</Icon>}
+              icon={icon} // Assumes icon is passed as a JSX element
               component={NavLink}
               to={route!}
               sx={{
