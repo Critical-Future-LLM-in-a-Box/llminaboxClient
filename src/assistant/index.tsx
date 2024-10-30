@@ -1,10 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import { ContextProvider } from "@/assistant/context";
-import Chatbot from "@/assistant/components/Chatbot"; // Import the unified Chatbot component
-import { Config } from "@/assistant/context/types";
-import "@/assistant/index.css";
+import Chatbot from "./components/Chatbot";
+import { ContextProvider } from "./context";
+import { Config } from "./context/types";
 
 const initConfig: Config = {
   assistant: {
