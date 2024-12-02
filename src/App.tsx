@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useLocation, Route } from "react-router-dom";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 
-import { useAppContext } from "@/client/context";
+import { useAppContext } from "@/context";
 import { routes, RouteType } from "@/client/routes";
 import { lightTheme, darkTheme } from "@/client/assets/themes";
 import Header from "@/client/components/Header";

@@ -18,7 +18,7 @@ import Brightness2Icon from "@mui/icons-material/Brightness2";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { RouteType } from "@/client/routes";
-import { useAppContext } from "@/client/context";
+import { useAppContext } from "@/context";
 import logo from "@/client/assets/images/llminaboxlogo.png";
 
 interface HeaderProps {

@@ -13,7 +13,7 @@ import {
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { RouteType } from "@/client/routes";
-import { useAppContext } from "@/client/context";
+import { useAppContext } from "@/context";
 
 interface SideNavigationProps {
   routes: RouteType[];
