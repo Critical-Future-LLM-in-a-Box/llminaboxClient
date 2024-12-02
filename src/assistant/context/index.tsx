@@ -1,42 +1,47 @@
 import React, { createContext, useContext, ReactNode } from "react";
-import { useImmerReducer, Reducer } from "use-immer";
-import { Config, ChatData, ChatAction } from "@/assistant/context/types";
+import { useImmerReducer } from "use-immer";
+import { Config, ChatData, ChatAction } from "@/assistant/types";
+import { defaultConfig, defaultChatData } from "@/assistant/config";
 
-const createContextData = (config: Config = {}): ChatData => ({
-  config,
-  chats: config.session?.chats || [],
-  chatid: config.session?.chatId || Math.random().toString().substring(2, 12),
-  messages: [
-    {
-      role: "api",
-      content:
-        config.assistant?.welcomeMessage ||
-        "Hello! How can I assist you today?",
-      timestamp: new Date().toLocaleString(),
-      uploads: []
-    }
-  ],
-  online: false,
-  error: "",
-  isApiTyping: false,
-  isUserTyping: false
-});
-
-// Context and Provider
-const ChatContext = createContext<
+export const ChatContext = createContext<
   [ChatData, React.Dispatch<ChatAction>] | null
 >(null);
 
-const ContextProvider = ({
+export const useContextData = () => {
+  const context = useContext(ChatContext);
+  if (!context) {
+    throw new Error("useContextData must be used within a ContextProvider");
+  }
+  return context;
+};
+
+const initializeChatData = (userConfig: Config): ChatData => ({
+  ...defaultChatData,
+  config: { ...defaultConfig, ...userConfig }
+});
+
+export const ContextProvider = ({
   children,
   config
 }: {
   children: ReactNode;
   config: Config;
 }): JSX.Element => {
+  const chatDataContextValue = initializeChatData(config);
+
+  const welcomeMessage = {
+    id: "1",
+    role: "api",
+    content: chatDataContextValue.config.assistant.welcomeMessage,
+    timestamp: new Date().toISOString(),
+    uploads: []
+  };
+
+  chatDataContextValue.session?.chatMessages?.push(welcomeMessage);
+
   const [chatData, dispatch] = useImmerReducer(
     chatReducer,
-    createContextData(config)
+    chatDataContextValue
   );
 
   return (
@@ -46,44 +51,12 @@ const ContextProvider = ({
   );
 };
 
-// Hook for using context data
-const useContextData = () => {
-  const context = useContext(ChatContext);
-  if (!context) {
-    throw new Error("useContextData must be used within a ContextProvider");
-  }
-  return context;
-};
-
-// Reducer
-const chatReducer: Reducer<ChatData, ChatAction> = (draft, action) => {
+export const chatReducer = (draft: ChatData, action: ChatAction) => {
   switch (action.type) {
     case "SET_CONFIG":
-      draft.config = action.payload;
-      break;
-    case "ADD_MESSAGE":
-      draft.messages.push(action.payload);
-      break;
-    case "SET_ONLINE_STATUS":
-      draft.online = action.payload;
-      break;
-    case "SET_ERROR":
-      draft.error = action.payload;
-      break;
-    case "SET_API_TYPING":
-      draft.isApiTyping = action.payload;
-      break;
-    case "SET_USER_TYPING":
-      draft.isUserTyping = action.payload;
-      break;
-    case "CLEAR_CHAT":
-      draft.messages = [];
-      draft.chatid = Math.random().toString().substring(2, 12);
-      localStorage.setItem("chatid", draft.chatid);
+      draft.config = { ...defaultConfig, ...action.payload };
       break;
     default:
-      break;
+      draft = draft;
   }
 };
-
-export { ContextProvider, useContextData, createContextData };

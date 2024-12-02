@@ -14,11 +14,15 @@ export default function ChatbotBody(): JSX.Element {
       ref={chatBodyRef}
       sx={{
         display: "flex",
-        height: "calc(100% - 160px)"
+        flex: 1
       }}
     >
-      <ChatbotSidebar />
-      <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+      {/* Sidebar */}
+      {chatData.config.assistant.sidebar && <ChatbotSidebar />}
+
+      {/* Main Chat Area */}
+      <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1, p: 1 }}>
+        {/* Messages List */}
         <Box
           sx={{
             display: "flex",
@@ -28,21 +32,19 @@ export default function ChatbotBody(): JSX.Element {
             p: 2
           }}
         >
-          {chatData.messages.map((message, index) => (
+          {chatData.session?.chatMessages.map((message) => (
             <MessageCard
-              key={index}
+              key={message.id}
               message={message}
-              isLastApiMessage={
-                message.role === "apiMessage" &&
-                index === chatData.messages.length - 1
-              }
             />
           ))}
         </Box>
+
+        {/* Divider between messages and input */}
         <Divider />
-        <Box sx={{ p: 2 }}>
-          <ChatbotInput />
-        </Box>
+
+        {/* Chat Input Area */}
+        <ChatbotInput />
       </Box>
     </Box>
   );

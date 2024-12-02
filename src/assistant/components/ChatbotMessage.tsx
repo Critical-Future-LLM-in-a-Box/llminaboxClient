@@ -1,22 +1,15 @@
-import React, { useState } from "react";
-import Color from "color";
+import React, { useState, useEffect } from "react";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { CircularProgress, Box, IconButton, Typography } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import StopIcon from "@mui/icons-material/Stop";
-import { useContextData, Message } from "@/assistant/context";
+import { useContextData } from "@/assistant/context";
+import { Message } from "@/assistant/types";
 import { getVoice } from "@/assistant/utils/getVoice";
 
-export default function MessageCard({
-  message,
-  isLastApiMessage
-}: {
-  message: Message;
-  isLastApiMessage: boolean;
-}) {
+export default function MessageCard({ message }: { message: Message }) {
   const [chatData, dispatch] = useContextData();
-
   const [isFetchingVoice, setIsFetchingVoice] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioInstance, setAudioInstance] = useState<HTMLAudioElement | null>(
@@ -35,10 +28,7 @@ export default function MessageCard({
           setAudioInstance(audio);
           audio.play();
           setIsPlaying(true);
-
-          audio.onended = () => {
-            setIsPlaying(false);
-          };
+          audio.onended = () => setIsPlaying(false);
         }
       } catch (error) {
         dispatch({
@@ -50,6 +40,49 @@ export default function MessageCard({
       }
     }
   };
+
+  const renderUploads = () =>
+    message.uploads?.map((upload, index) => (
+      <Box
+        key={index}
+        sx={{ mb: 1 }}
+      >
+        {upload.type === "file" && upload.mime?.startsWith("image") ? (
+          <Box
+            component="img"
+            src={upload.data}
+            alt={upload.name}
+            sx={{
+              width: 80,
+              height: 80,
+              objectFit: "cover",
+              borderRadius: 1
+            }}
+          />
+        ) : upload.type === "audio" ? (
+          <Box
+            component="audio"
+            controls
+            src={upload.data}
+            sx={{ width: "100%" }}
+          >
+            <track kind="captions" />
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              p: 1,
+              border: "1px solid",
+              borderColor: "grey.300",
+              borderRadius: 1,
+              typography: "body2"
+            }}
+          >
+            {upload.name}
+          </Box>
+        )}
+      </Box>
+    ));
 
   return (
     <Box
@@ -66,62 +99,16 @@ export default function MessageCard({
           display: "inline-block",
           p: 2,
           borderRadius: 1,
-          bgcolor:
-            message.role === "apiMessage"
-              ? Color(chatData.config.themeColor).darken(0.02).toString()
-              : Color(chatData.config.themeColor).darken(0.01).toString()
+          bgcolor: chatData.config.ui?.backgroundColor
         }}
       >
-        {chatData.isApiTyping && isLastApiMessage ? (
+        {chatData.api.isApiTyping ? (
           <CircularProgress size={16} />
         ) : (
           <>
-            <MessageMarked content={message.content} />
-            {message.uploads && message.uploads.length > 0 && (
-              <Box sx={{ mt: 1 }}>
-                {message.uploads.map((upload, index) => (
-                  <Box
-                    key={index}
-                    sx={{ mb: 1 }}
-                  >
-                    {upload.type === "file" &&
-                    upload.mime.startsWith("image") ? (
-                      <Box
-                        component="img"
-                        src={upload.data}
-                        alt={upload.name}
-                        sx={{
-                          width: 80,
-                          height: 80,
-                          objectFit: "cover",
-                          borderRadius: 1
-                        }}
-                      />
-                    ) : upload.type === "audio" ? (
-                      <Box
-                        component="audio"
-                        controls
-                        src={upload.data}
-                        sx={{ width: "100%" }}
-                      >
-                        <track kind="captions" />
-                      </Box>
-                    ) : (
-                      <Box
-                        sx={{
-                          p: 1,
-                          border: "1px solid",
-                          borderColor: "grey.300",
-                          borderRadius: 1,
-                          typography: "body2"
-                        }}
-                      >
-                        {upload.name}
-                      </Box>
-                    )}
-                  </Box>
-                ))}
-              </Box>
+            <MessageMarkedWrapper content={message.content} />
+            {(message.uploads?.length ?? 0) > 0 && (
+              <Box sx={{ mt: 1 }}>{renderUploads()}</Box>
             )}
           </>
         )}
@@ -130,13 +117,12 @@ export default function MessageCard({
       <Box
         sx={{
           display: "flex",
-          alignItems: "center",
-          gap: 1,
-          color: "text.secondary",
-          mt: 1
+          alignItems: "center"
         }}
       >
-        <Typography variant="caption">{message.timestamp}</Typography>
+        <Typography variant="caption">
+          {new Date(message.timestamp).toLocaleString()}
+        </Typography>
         {message.role === "apiMessage" && (
           <IconButton
             onClick={handleVoiceClick}
@@ -156,9 +142,17 @@ export default function MessageCard({
   );
 }
 
-export function MessageMarked({ content }: { content: string }): JSX.Element {
-  const rawHtml = marked(content);
-  const sanitizedHtml = DOMPurify.sanitize(rawHtml as string);
+export function MessageMarkedWrapper({ content }: { content: string }) {
+  const [sanitizedHtml, setSanitizedHtml] = useState<string>("");
+
+  useEffect(() => {
+    const sanitizeContent = async () => {
+      const html = DOMPurify.sanitize(await marked(content));
+      setSanitizedHtml(html);
+    };
+    sanitizeContent();
+  }, [content]);
+
   return (
     <Box
       sx={{ typography: "body2" }}
